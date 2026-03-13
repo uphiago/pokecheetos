@@ -280,7 +280,7 @@ git commit -m "chore: scaffold workspace and toolchain"
 - Create: `packages/config/src/index.ts`
 - Test: `packages/config/src/runtime.test.ts`
 
-- [ ] **Step 1: Write the failing runtime constants test**
+- [x] **Step 1: Write the failing runtime constants test**
 
 Create `packages/config/src/runtime.test.ts`:
 
@@ -302,7 +302,7 @@ describe('runtimeConfig', () => {
 Run: `pnpm exec vitest run packages/config/src/runtime.test.ts`
 Expected: FAIL because the config package does not exist yet
 
-- [ ] **Step 2: Create package and config files**
+- [x] **Step 2: Create package and config files**
 
 Create `packages/config/package.json`:
 
@@ -403,7 +403,7 @@ Create `packages/config/src/index.ts`:
 export * from './runtime';
 ```
 
-- [ ] **Step 3: Verify package-local loading**
+- [x] **Step 3: Verify package-local loading**
 
 Run: `pnpm exec vitest run packages/config/src/runtime.test.ts`
 Expected: PASS
@@ -414,7 +414,7 @@ Expected: PASS
 Run: `pnpm exec node -e "import('./packages/config/src/index.ts').then((m) => console.log(m.runtimeConfig.roomCapacity))"`
 Expected: PASS and prints `50`
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add packages/config
@@ -1305,4 +1305,11 @@ Plan complete and saved to `docs/superpowers/plans/2026-03-13-pokecheetos-founda
   - Reconciled Task 6 Step 1/2/3/4/5 checklist state with already-landed Fastify bootstrap/session/logging implementation.
   - `pnpm --filter @pokecheetos/server test -- apps/server/src/http/routes/guest-bootstrap.test.ts` ✅
   - `pnpm --filter @pokecheetos/server typecheck` ✅
+  - Notes: no blocking issue found in this block.
+- [x] 2026-03-13 11:08 BRT — task 2 config package-local loading alignment block
+  - Reconciled Task 2 Step 1/2/3/4 checklist state with implemented `@pokecheetos/config` package files.
+  - Fixed package-local ESM smoke loading by exporting with explicit `.ts` extension in `packages/config/src/index.ts` and enabling `allowImportingTsExtensions` in `packages/config/tsconfig.json`.
+  - `pnpm exec vitest run packages/config/src/runtime.test.ts` ✅
+  - `pnpm exec tsc -p packages/config/tsconfig.json --noEmit` ✅
+  - `pnpm exec node -e "import('./packages/config/src/index.ts').then((m) => console.log(m.runtimeConfig.roomCapacity))"` ✅
   - Notes: no blocking issue found in this block.
