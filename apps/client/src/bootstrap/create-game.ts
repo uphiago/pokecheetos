@@ -3,6 +3,11 @@ import { RoomConnectionManager } from '../network/room-connection-manager.ts';
 import { createRoomClient, type RoomLike, type RoomClient as RoomClientInstance } from '../network/room-client.ts';
 import { SessionClient } from '../session/session-client.ts';
 import { UiShellBridge } from '../ui/ui-shell-bridge.ts';
+import {
+  createClientDiagnostics,
+  reportClientDiagnostics,
+  type ClientDiagnostics
+} from '../ui/client-diagnostics.ts';
 
 export type GameLike = {
   destroy(removeCanvas?: boolean): void;
@@ -38,7 +43,13 @@ type RoomConnectionManagerLike<TRoom extends RoomLike> = {
 type UiShellBridgeLike<TRoom extends RoomLike> = {
   showBooting(): void;
   showConnected(input: { session: GuestBootstrapResponse; room: TRoom }): void;
-  showError(message: string): void;
+  showError(input: {
+    diagnostics: ClientDiagnostics;
+    recovery?: {
+      label: string;
+      run(): void;
+    };
+  }): void;
 };
 
 export type CreateGameOptions<TRoom extends RoomLike = RoomLike> = {
@@ -54,6 +65,7 @@ export type CreateGameOptions<TRoom extends RoomLike = RoomLike> = {
   roomConnectionManager?: RoomConnectionManagerLike<TRoom>;
   uiShellBridge?: UiShellBridgeLike<TRoom>;
   createUiShellBridge?: (parent: string | HTMLElement) => UiShellBridgeLike<TRoom>;
+  diagnosticsLogger?: Pick<Console, 'error'>;
 };
 
 const DEFAULT_SCENE_LIST: unknown[] = [];
@@ -89,18 +101,49 @@ export async function createGame<TRoom extends RoomLike = RoomLike>(
   const sessionClient = options.sessionClient ?? new SessionClient({ baseUrl: options.baseUrl });
   const roomConnectionManager =
     options.roomConnectionManager ?? createDefaultRoomConnectionManager(options);
-
-  uiShellBridge.showBooting();
-
-  let session: GuestBootstrapResponse;
+  let session: GuestBootstrapResponse | undefined;
   let room: TRoom;
 
-  try {
-    session = await sessionClient.bootstrapStoredGuest();
-    room = await roomConnectionManager.connect(session);
-  } catch (error) {
-    uiShellBridge.showError(error instanceof Error ? error.message : 'Unknown bootstrap error');
-    throw error;
+  for (;;) {
+    uiShellBridge.showBooting();
+
+    try {
+      session ??= await sessionClient.bootstrapStoredGuest();
+      room = await roomConnectionManager.connect(session);
+      break;
+    } catch (error) {
+      const diagnostics = createClientDiagnostics(error, {
+        phase: isConnectPhaseCandidate(session) ? 'connect' : 'bootstrap',
+        roomIdHint: session?.roomIdHint
+      });
+      reportClientDiagnostics({
+        diagnostics,
+        error,
+        logger: options.diagnosticsLogger
+      });
+
+      await new Promise<void>((resolve) => {
+        uiShellBridge.showError({
+          diagnostics,
+          recovery: diagnostics.retryable
+            ? {
+                label: diagnostics.phase === 'connect' ? 'Retry room join' : 'Retry connection',
+                run() {
+                  if (diagnostics.phase === 'bootstrap') {
+                    session = undefined;
+                  }
+
+                  resolve();
+                }
+              }
+            : undefined
+        });
+      });
+    }
+  }
+
+  if (!session) {
+    throw new Error('createGame resolved without a bootstrapped session');
   }
 
   uiShellBridge.showConnected({ session, room });
@@ -116,6 +159,10 @@ export async function createGame<TRoom extends RoomLike = RoomLike>(
     session,
     uiShellBridge
   };
+}
+
+function isConnectPhaseCandidate(session: GuestBootstrapResponse | undefined): session is GuestBootstrapResponse {
+  return Boolean(session);
 }
 
 function createDefaultRoomConnectionManager<TRoom extends RoomLike>(

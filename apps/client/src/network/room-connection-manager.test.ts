@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'vitest';
-import { RoomConnectionManager } from './room-connection-manager.ts';
+import { RoomConnectionError, RoomConnectionManager } from './room-connection-manager.ts';
 
 describe('RoomConnectionManager', () => {
   const bootstrapIdentity = {
@@ -15,6 +15,7 @@ describe('RoomConnectionManager', () => {
 
   it('retries a failed join with the same issued bootstrap identity', async () => {
     const joinCalls: Array<Record<string, unknown>> = [];
+    const delays: number[] = [];
     const room = {
       roomId: 'town:base:1',
       async leave() {}
@@ -29,6 +30,10 @@ describe('RoomConnectionManager', () => {
 
           return room;
         }
+      },
+      retryBackoffMs: [25],
+      wait: async (delayMs) => {
+        delays.push(delayMs);
       }
     });
 
@@ -38,7 +43,36 @@ describe('RoomConnectionManager', () => {
     assert.equal(joinCalls.length, 2);
     assert.deepEqual(joinCalls[0], bootstrapIdentity);
     assert.deepEqual(joinCalls[1], bootstrapIdentity);
+    assert.deepEqual(delays, [25]);
     assert.equal(manager.getActiveRoom(), room);
+  });
+
+  it('throws a typed room connection error after exhausting capped retry attempts', async () => {
+    const delays: number[] = [];
+    const manager = new RoomConnectionManager({
+      roomClient: {
+        async joinWorld() {
+          throw new Error('seat reservation expired');
+        }
+      },
+      retryBackoffMs: [25, 50],
+      wait: async (delayMs) => {
+        delays.push(delayMs);
+      }
+    });
+
+    await assert.rejects(() => manager.connect({ ...bootstrapIdentity }), (error: unknown) => {
+      if (!(error instanceof RoomConnectionError)) {
+        return false;
+      }
+
+      assert.equal(error.roomIdHint, 'town:base:1');
+      assert.equal(error.attempts, 3);
+      assert.equal(error.retryable, true);
+      assert.match(error.message, /seat reservation expired/i);
+      return true;
+    });
+    assert.deepEqual(delays, [25, 50]);
   });
 
   it('reuses the active room when connect is called again with the same identity', async () => {
