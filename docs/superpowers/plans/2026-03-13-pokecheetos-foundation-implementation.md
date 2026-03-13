@@ -762,7 +762,7 @@ git commit -m "feat: add server scaffold and persistence"
 - Create: `apps/server/src/services/session-service.ts`
 - Test: `apps/server/src/http/routes/guest-bootstrap.test.ts`
 
-- [ ] **Step 1: Write the failing bootstrap route tests**
+- [x] **Step 1: Write the failing bootstrap route tests**
 
 Create `apps/server/src/http/routes/guest-bootstrap.test.ts` with cases for:
 
@@ -771,12 +771,12 @@ Create `apps/server/src/http/routes/guest-bootstrap.test.ts` with cases for:
 - valid token -> existing guest restored with persisted `mapId`, `tileX`, `tileY`, `roomIdHint`
 - persistence failure -> typed 5xx payload `{ code: 'bootstrap_failed', message }`
 
-- [ ] **Step 2: Run tests to verify they fail**
+- [x] **Step 2: Run tests to verify they fail**
 
 Run: `pnpm --filter @pokecheetos/server test -- apps/server/src/http/routes/guest-bootstrap.test.ts`
 Expected: FAIL because the app and routes do not exist yet
 
-- [ ] **Step 3: Implement Fastify app, route, logging, and session service**
+- [x] **Step 3: Implement Fastify app, route, logging, and session service**
 
 Implement:
 
@@ -788,12 +788,12 @@ Implement:
 
 Import runtime constants from `@pokecheetos/config`.
 
-- [ ] **Step 4: Verify tests**
+- [x] **Step 4: Verify tests**
 
 Run: `pnpm --filter @pokecheetos/server test -- apps/server/src/http/routes/guest-bootstrap.test.ts`
 Expected: PASS
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add apps/server/src/index.ts apps/server/src/http apps/server/src/logging/logger.ts apps/server/src/services/session-service.ts
@@ -1300,4 +1300,9 @@ Plan complete and saved to `docs/superpowers/plans/2026-03-13-pokecheetos-founda
   - Reconciled Task 9 Step 1/2/3/4/5/6 checklist state with already-landed client bootstrap/session/connection commits.
   - `pnpm --filter @pokecheetos/client test -- apps/client/src/session/session-client.test.ts apps/client/src/network/room-connection-manager.test.ts apps/client/src/bootstrap/create-game.test.ts` ✅
   - `pnpm --filter @pokecheetos/client typecheck` ✅
+  - Notes: no blocking issue found in this block.
+- [x] 2026-03-13 10:47 BRT — task 6 checklist reconciliation + verification block
+  - Reconciled Task 6 Step 1/2/3/4/5 checklist state with already-landed Fastify bootstrap/session/logging implementation.
+  - `pnpm --filter @pokecheetos/server test -- apps/server/src/http/routes/guest-bootstrap.test.ts` ✅
+  - `pnpm --filter @pokecheetos/server typecheck` ✅
   - Notes: no blocking issue found in this block.
