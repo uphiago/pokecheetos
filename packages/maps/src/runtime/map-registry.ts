@@ -9,3 +9,7 @@ export function loadCompiledMap(mapId: string): CompiledMap {
   const filePath = join(packageRoot, 'generated', `${mapId}.json`);
   return JSON.parse(readFileSync(filePath, 'utf8')) as CompiledMap;
 }
+
+export function getCompiledMapById(mapId: string): CompiledMap {
+  return loadCompiledMap(mapId);
+}

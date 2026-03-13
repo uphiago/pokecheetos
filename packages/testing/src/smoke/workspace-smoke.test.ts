@@ -16,7 +16,7 @@ describe('workspace smoke', () => {
 
     expect(nextTile).toEqual({ tileX: 11, tileY: 10 });
     expect(runtimeConfig.serverTickRate).toBe(20);
-    expect(town.id).toBe('town');
+    expect(town.mapId).toBe('town');
     expect(room.mapId).toBe('town');
     expect(guest.mapId).toBe('town');
   });
