@@ -161,7 +161,7 @@
 - Create: `tsconfig.base.json`
 - Modify: `.gitignore`
 
-- [ ] **Step 1: Write the failing root workspace scaffold**
+- [x] **Step 1: Write the failing root workspace scaffold**
 
 Create `package.json`:
 
@@ -193,7 +193,7 @@ Create `package.json`:
 Run: `pnpm exec turbo --version`
 Expected: FAIL because dependencies are not installed yet
 
-- [ ] **Step 2: Add workspace files and ignore rules**
+- [x] **Step 2: Add workspace files and ignore rules**
 
 Create `pnpm-workspace.yaml`:
 
@@ -247,12 +247,12 @@ coverage
 *.db-wal
 ```
 
-- [ ] **Step 3: Install the root toolchain**
+- [x] **Step 3: Install the root toolchain**
 
 Run: `pnpm install`
 Expected: PASS, `pnpm-lock.yaml` created, root tools installed
 
-- [ ] **Step 4: Verify workspace bootstrap**
+- [x] **Step 4: Verify workspace bootstrap**
 
 Run: `pnpm exec turbo --version`
 Expected: PASS
@@ -260,7 +260,7 @@ Expected: PASS
 Run: `pnpm exec turbo run test --dry`
 Expected: PASS and shows an empty or no-task dry run without package errors
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add package.json pnpm-workspace.yaml turbo.json tsconfig.base.json .gitignore pnpm-lock.yaml
