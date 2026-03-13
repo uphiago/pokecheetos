@@ -138,6 +138,8 @@ export class WorldRoom extends Room<WorldState> {
 
     const playerState = this.resolveJoinPlayerState(options);
     this.state.players.set(client.sessionId, playerState);
+    this.sanitizeSchemaPlayers();
+
     this.clientRegistry.set(client.sessionId, {
       leave: (code?: number, data?: string) => client.leave(code, data),
       removePlayerState: () => this.removePlayerState(client.sessionId)
@@ -385,6 +387,16 @@ export class WorldRoom extends Room<WorldState> {
 
     for (const visibleSet of this.visibilityByClient.values()) {
       visibleSet.delete(clientSessionId);
+    }
+  }
+
+  private sanitizeSchemaPlayers(): void {
+    for (const [sessionId, player] of this.state.players.entries()) {
+      if (player instanceof PlayerState) {
+        continue;
+      }
+
+      this.state.players.delete(sessionId);
     }
   }
 }
