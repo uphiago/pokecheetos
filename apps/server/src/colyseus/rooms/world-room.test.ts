@@ -99,6 +99,47 @@ describe('WorldRoom simulation', () => {
       roomIdHint: 'route-1:base:1'
     });
   });
+
+  it('persists authoritative movement through the injected player repository', () => {
+    const repository = {
+      updateLastKnownState: vi.fn(),
+      updateLastSeenAt: vi.fn()
+    };
+
+    const room = new WorldRoom({
+      playerRepository: repository,
+      loadMapById: () => ({
+        mapId: 'town',
+        width: 12,
+        height: 12,
+        defaultSpawnId: 'spawn',
+        blockedTiles: [],
+        spawns: { spawn: { tileX: 2, tileY: 2 } },
+        transitions: [],
+        npcs: []
+      })
+    });
+
+    const player = new PlayerState();
+    player.guestId = 'guest-9';
+    player.displayName = 'Guest 9';
+    player.mapId = 'town';
+    player.tileX = 2;
+    player.tileY = 2;
+    player.direction = 'up';
+    room.state = { players: new Map([['session-9', player]]), mapId: 'town', roomId: 'town:base:1' } as any;
+
+    room.handleMoveIntent({ sessionId: 'session-9' }, { direction: 'right', pressed: true });
+    room.simulateStepForClient({ sessionId: 'session-9', send: vi.fn() });
+
+    expect(repository.updateLastKnownState).toHaveBeenCalledWith('guest-9', {
+      lastMapId: 'town',
+      lastTileX: 3,
+      lastTileY: 2,
+      lastDirection: 'right'
+    });
+    expect(repository.updateLastSeenAt).toHaveBeenCalledWith('guest-9');
+  });
 });
 
 describe('WorldRoom visibility', () => {

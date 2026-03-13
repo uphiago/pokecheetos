@@ -17,6 +17,7 @@ import {
   createWorldSimulationService,
   type WorldSimulationService
 } from '../../services/world-simulation-service';
+import type { ReturnTypeCreatePlayerRepository } from '../../services/types';
 import { PlayerState } from '../schema/player-state';
 import { WorldState } from '../schema/world-state';
 
@@ -46,6 +47,7 @@ type ReconnectReservation = {
 type WorldRoomDependencies = {
   npcInteractionService?: NpcInteractionService;
   worldSimulationService?: Pick<WorldSimulationService, 'simulateStep'>;
+  playerRepository?: Pick<ReturnTypeCreatePlayerRepository, 'updateLastKnownState' | 'updateLastSeenAt'>;
   presenceService?: Pick<PresenceService, 'register' | 'unregister'>;
   clientRegistry?: Map<string, RegisteredClientConnection>;
   loadMapById?: (mapId: string) => ReturnType<typeof loadCompiledMap>;
@@ -78,14 +80,16 @@ export class WorldRoom extends Room<WorldState> {
       });
     this.worldSimulationService =
       dependencies.worldSimulationService ??
-      createWorldSimulationService({
-        updateLastKnownState() {
-          // Persistence wiring will inject the real repository in a future room factory.
-        },
-        updateLastSeenAt() {
-          // Persistence wiring will inject the real repository in a future room factory.
+      createWorldSimulationService(
+        dependencies.playerRepository ?? {
+          updateLastKnownState() {
+            // Persistence wiring can inject the real repository in room factory composition.
+          },
+          updateLastSeenAt() {
+            // Persistence wiring can inject the real repository in room factory composition.
+          }
         }
-      });
+      );
     this.presenceService = dependencies.presenceService ?? defaultPresenceService;
     this.loadMapById = dependencies.loadMapById ?? loadCompiledMap;
     this.clientRegistry = dependencies.clientRegistry ?? defaultClientRegistry;

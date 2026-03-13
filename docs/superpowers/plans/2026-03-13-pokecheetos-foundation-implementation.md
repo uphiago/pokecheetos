@@ -1252,3 +1252,9 @@ Plan complete and saved to `docs/superpowers/plans/2026-03-13-pokecheetos-founda
   - `pnpm --filter @pokecheetos/server test -- apps/server/src/colyseus/rooms/world-room.test.ts` ✅
   - `pnpm --filter @pokecheetos/server typecheck` ✅
   - Notes: no blocking issue found in this block.
+- [x] 2026-03-13 07:48 BRT — task 7 persistence wiring verification block
+  - Added `WorldRoom` dependency injection for `playerRepository` so default room simulation can persist `updateLastKnownState()` and `updateLastSeenAt()` without custom simulation stubs.
+  - Added focused `world-room.test.ts` coverage proving authoritative movement triggers repository persistence updates.
+  - `pnpm --filter @pokecheetos/server test -- apps/server/src/colyseus/rooms/world-room.test.ts` ✅
+  - `pnpm --filter @pokecheetos/server typecheck` ✅
+  - Notes: no blocking issue found in this block.
