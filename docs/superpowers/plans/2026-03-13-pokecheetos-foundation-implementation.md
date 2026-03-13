@@ -1218,3 +1218,9 @@ Plan complete and saved to `docs/superpowers/plans/2026-03-13-pokecheetos-founda
   - `pnpm --filter @pokecheetos/server test -- apps/server/src/services/npc-interaction-service.test.ts` ✅
   - `pnpm --filter @pokecheetos/server exec tsx src/loadtest/world-room.loadtest.ts --clients 5 --duration-ms 5000 --map-id town` ✅
   - Notes: task 8 checklist reconciled with implemented commits; no blocking issue found.
+- [x] 2026-03-13 06:08 BRT — task 7 movement input groundwork block
+  - Implemented `move_intent` handling in `WorldRoom` with held direction + one-step buffered direction state.
+  - Added focused tests in `apps/server/src/colyseus/rooms/world-room.test.ts` for pressed/released input and buffered-direction consume flow.
+  - `pnpm --filter @pokecheetos/server test -- apps/server/src/colyseus/rooms/world-room.test.ts` ✅
+  - `pnpm --filter @pokecheetos/server typecheck` ✅
+  - Notes: groundwork complete; full room simulation tick/reconnect/visibility assertions still pending for full Task 7 closure.

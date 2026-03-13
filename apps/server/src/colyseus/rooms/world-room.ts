@@ -1,7 +1,13 @@
 import { Room, type Client } from 'colyseus';
 import { runtimeConfig } from '@pokecheetos/config';
 import { loadCompiledMap } from '@pokecheetos/maps';
-import type { NpcInteractCommand, NpcDialogueEvent, RoomErrorEvent } from '@pokecheetos/shared';
+import type {
+  Direction,
+  MoveIntentCommand,
+  NpcInteractCommand,
+  NpcDialogueEvent,
+  RoomErrorEvent
+} from '@pokecheetos/shared';
 import { createNpcInteractionService, type NpcInteractionService } from '../../services/npc-interaction-service';
 import { WorldState } from '../schema/world-state';
 
@@ -11,8 +17,14 @@ export type WorldRoomOptions = Readonly<{
   maxClients: number;
 }>;
 
+type MovementInputState = {
+  heldDirection?: Direction;
+  bufferedDirection?: Direction;
+};
+
 export class WorldRoom extends Room<WorldState> {
   private readonly npcInteractionService: NpcInteractionService;
+  private readonly movementInputs = new Map<string, MovementInputState>();
 
   constructor() {
     super();
@@ -33,9 +45,58 @@ export class WorldRoom extends Room<WorldState> {
       })
     );
 
+    this.onMessage('move_intent', (client: Client, message: MoveIntentCommand) => {
+      this.handleMoveIntent(client, message);
+    });
+
     this.onMessage('npc_interact', (client: Client, message: NpcInteractCommand) => {
       this.handleNpcInteract(client, message.npcId);
     });
+  }
+
+  handleMoveIntent(
+    client: Pick<Client, 'sessionId'>,
+    command: Pick<MoveIntentCommand, 'direction' | 'pressed'>
+  ): void {
+    const current = this.movementInputs.get(client.sessionId) ?? {};
+
+    if (command.pressed) {
+      if (!current.heldDirection) {
+        current.heldDirection = command.direction;
+      } else if (current.heldDirection !== command.direction) {
+        current.bufferedDirection = command.direction;
+      }
+    } else {
+      if (current.heldDirection === command.direction) {
+        current.heldDirection = undefined;
+      }
+
+      if (current.bufferedDirection === command.direction) {
+        current.bufferedDirection = undefined;
+      }
+    }
+
+    if (!current.heldDirection && !current.bufferedDirection) {
+      this.movementInputs.delete(client.sessionId);
+      return;
+    }
+
+    this.movementInputs.set(client.sessionId, current);
+  }
+
+  getMovementInput(clientSessionId: string): Readonly<MovementInputState> {
+    return this.movementInputs.get(clientSessionId) ?? {};
+  }
+
+  consumeBufferedDirection(clientSessionId: string): void {
+    const current = this.movementInputs.get(clientSessionId);
+    if (!current?.bufferedDirection) {
+      return;
+    }
+
+    current.heldDirection = current.bufferedDirection;
+    current.bufferedDirection = undefined;
+    this.movementInputs.set(clientSessionId, current);
   }
 
   handleNpcInteract(client: Pick<Client, 'sessionId' | 'send'>, npcId: string): void {

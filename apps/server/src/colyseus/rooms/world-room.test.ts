@@ -2,6 +2,36 @@ import { describe, expect, it, vi } from 'vitest';
 import { PlayerState } from '../schema/player-state';
 import { WorldRoom } from './world-room';
 
+describe('WorldRoom move_intent', () => {
+  it('tracks pressed and released direction state', () => {
+    const room = new WorldRoom();
+
+    room.handleMoveIntent({ sessionId: 'session-1' }, { direction: 'left', pressed: true });
+    expect(room.getMovementInput('session-1')).toEqual({ heldDirection: 'left' });
+
+    room.handleMoveIntent({ sessionId: 'session-1' }, { direction: 'left', pressed: false });
+    expect(room.getMovementInput('session-1')).toEqual({});
+  });
+
+  it('keeps one-step buffered direction and promotes it when consumed', () => {
+    const room = new WorldRoom();
+
+    room.handleMoveIntent({ sessionId: 'session-1' }, { direction: 'up', pressed: true });
+    room.handleMoveIntent({ sessionId: 'session-1' }, { direction: 'right', pressed: true });
+
+    expect(room.getMovementInput('session-1')).toEqual({
+      heldDirection: 'up',
+      bufferedDirection: 'right'
+    });
+
+    room.consumeBufferedDirection('session-1');
+
+    expect(room.getMovementInput('session-1')).toEqual({
+      heldDirection: 'right'
+    });
+  });
+});
+
 describe('WorldRoom npc_interact', () => {
   it('sends npc_dialogue when interaction is valid', () => {
     const room = new WorldRoom();
