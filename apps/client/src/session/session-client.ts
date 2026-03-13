@@ -52,7 +52,9 @@ export class SessionClient {
 
   constructor(options: SessionClientOptions = {}) {
     this.#baseUrl = options.baseUrl ?? '';
-    this.#fetchFn = options.fetchFn ?? fetch;
+    this.#fetchFn =
+      options.fetchFn ??
+      ((input: string, init?: RequestInit) => globalThis.fetch(input, init) as Promise<ResponseLike>);
     this.#storage = options.storage ?? resolveDefaultStorage();
   }
 
