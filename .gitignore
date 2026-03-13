@@ -12,6 +12,7 @@ node_modules/
 # Build
 dist/
 .turbo
+.worktrees/
 coverage
 *.db
 *.db-shm
