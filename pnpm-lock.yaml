@@ -57,6 +57,9 @@ importers:
       '@pokecheetos/config':
         specifier: workspace:*
         version: link:../../packages/config
+      '@pokecheetos/maps':
+        specifier: workspace:*
+        version: link:../../packages/maps
       '@pokecheetos/shared':
         specifier: workspace:*
         version: link:../../packages/shared
