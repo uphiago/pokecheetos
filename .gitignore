@@ -11,5 +11,10 @@ node_modules/
 
 # Build
 dist/
+.turbo
+coverage
+*.db
+*.db-shm
+*.db-wal
 /npm-debug.log
 /server/config.js
