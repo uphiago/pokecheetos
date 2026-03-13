@@ -2,8 +2,9 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "lib": ["DOM", "DOM.Iterable", "ES2022"],
-    "types": ["vite/client"],
-    "jsx": "preserve"
+    "types": ["vite/client", "node"],
+    "jsx": "preserve",
+    "allowImportingTsExtensions": true
   },
   "include": ["src/**/*.ts", "vite.config.ts", "vitest.config.ts"]
 }

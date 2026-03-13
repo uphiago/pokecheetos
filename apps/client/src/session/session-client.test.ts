@@ -51,15 +51,15 @@ describe('SessionClient', () => {
       })
     });
 
-    await assert.rejects(
-      () => client.bootstrapGuest(),
-      (error: unknown) => {
-        assert.ok(error instanceof SessionBootstrapError);
-        assert.equal(error.code, 'bootstrap_failed');
-        assert.equal(error.status, 500);
-        assert.match(error.message, /bootstrap guest session/i);
-        return true;
+    await assert.rejects(() => client.bootstrapGuest(), (error: unknown) => {
+      if (!(error instanceof SessionBootstrapError)) {
+        return false;
       }
-    );
+
+      assert.equal(error.code, 'bootstrap_failed');
+      assert.equal(error.status, 500);
+      assert.match(error.message, /bootstrap guest session/i);
+      return true;
+    });
   });
 });

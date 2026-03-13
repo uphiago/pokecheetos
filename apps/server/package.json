@@ -9,6 +9,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
+    "@colyseus/schema": "^3.0.0",
     "@pokecheetos/config": "workspace:*",
     "@pokecheetos/shared": "workspace:*",
     "better-sqlite3": "^12.4.1",

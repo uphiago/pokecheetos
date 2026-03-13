@@ -22,6 +22,6 @@ describe('createGame', () => {
     assert.equal(gameFactoryCalls.length, 1);
     assert.equal(gameFactoryCalls[0]?.type, 777);
     assert.equal(gameFactoryCalls[0]?.parent, 'app');
-    assert.equal(gameFactoryCalls[0]?.scene, scenes);
+    assert.deepEqual(gameFactoryCalls[0]?.scene, scenes);
   });
 });

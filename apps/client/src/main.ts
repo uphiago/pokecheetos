@@ -15,7 +15,7 @@ async function bootstrapClient() {
     parent: mountNode,
     phaserModule: {
       AUTO: phaserModule.AUTO,
-      Game: phaserModule.Game
+      Game: phaserModule.Game as unknown as new (config?: unknown) => { destroy(removeCanvas?: boolean): void }
     },
     scenes: []
   });

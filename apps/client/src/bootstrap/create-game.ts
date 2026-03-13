@@ -3,7 +3,7 @@ export type GameLike = {
 };
 
 export type GameConfig = {
-  type: number | string;
+  type: number;
   parent: string | HTMLElement;
   backgroundColor: string;
   render: {
@@ -13,23 +13,23 @@ export type GameConfig = {
     width: number;
     height: number;
   };
-  scene: readonly unknown[];
+  scene: unknown[];
 };
 
 export type PhaserModuleLike = {
-  AUTO: number | string;
-  Game: new (config: GameConfig) => GameLike;
+  AUTO: number;
+  Game: new (config?: unknown) => GameLike;
 };
 
 export type CreateGameOptions = {
   parent: string | HTMLElement;
   scenes?: readonly unknown[];
-  rendererType?: number | string;
+  rendererType?: number;
   gameFactory?: (config: GameConfig) => GameLike;
   phaserModule?: PhaserModuleLike;
 };
 
-const DEFAULT_SCENE_LIST: readonly unknown[] = [];
+const DEFAULT_SCENE_LIST: unknown[] = [];
 
 function buildDefaultConfig(options: CreateGameOptions, phaserModule?: PhaserModuleLike): GameConfig {
   return {
@@ -43,7 +43,7 @@ function buildDefaultConfig(options: CreateGameOptions, phaserModule?: PhaserMod
       width: 960,
       height: 640
     },
-    scene: options.scenes ?? DEFAULT_SCENE_LIST
+    scene: options.scenes ? [...options.scenes] : [...DEFAULT_SCENE_LIST]
   };
 }
 
