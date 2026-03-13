@@ -10,5 +10,8 @@
     "test": "vitest run",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "build:maps": "tsx src/compiler/write-compiled-maps.ts"
+  },
+  "devDependencies": {
+    "tsx": "^4.20.6"
   }
 }

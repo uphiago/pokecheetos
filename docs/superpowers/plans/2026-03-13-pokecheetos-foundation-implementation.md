@@ -657,7 +657,7 @@ Implement:
 
 Generated JSON is committed to the repo and also reproducible via `build:maps`.
 
-- [ ] **Step 4: Emit and consume compiled artifacts**
+- [x] **Step 4: Emit and consume compiled artifacts**
 
 Run: `pnpm --filter @pokecheetos/maps exec tsx src/compiler/write-compiled-maps.ts`
 Expected: PASS, compiled JSON written to `packages/maps/generated/*.json`
@@ -665,7 +665,7 @@ Expected: PASS, compiled JSON written to `packages/maps/generated/*.json`
 Run: `pnpm --filter @pokecheetos/maps test`
 Expected: PASS
 
-- [ ] **Step 5: Verify package typecheck**
+- [x] **Step 5: Verify package typecheck**
 
 Run: `pnpm --filter @pokecheetos/maps typecheck`
 Expected: PASS
@@ -1322,4 +1322,10 @@ Plan complete and saved to `docs/superpowers/plans/2026-03-13-pokecheetos-founda
   - Reconciled Task 3 Step 1/2/3/4/5 checklist state with already-landed `@pokecheetos/shared` grid/protocol/world contracts.
   - `pnpm --filter @pokecheetos/shared test` ✅
   - `pnpm --filter @pokecheetos/shared typecheck` ✅
+  - Notes: no blocking issue found in this block.
+- [x] 2026-03-13 12:16 BRT — task 4 artifact emission + typecheck verification block
+  - Added `tsx` as a local dev dependency of `@pokecheetos/maps` to guarantee `build:maps` availability from package scope.
+  - Re-emitted compiled artifacts via `pnpm --filter @pokecheetos/maps exec tsx src/compiler/write-compiled-maps.ts`.
+  - `pnpm --filter @pokecheetos/maps test` ✅
+  - `pnpm --filter @pokecheetos/maps typecheck` ✅
   - Notes: no blocking issue found in this block.

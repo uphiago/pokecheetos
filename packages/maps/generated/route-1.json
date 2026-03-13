@@ -3,12 +3,21 @@
   "width": 30,
   "height": 20,
   "defaultSpawnId": "route_entry",
-  "blockedTiles": ["8:8"],
+  "blockedTiles": [
+    "8:8"
+  ],
   "spawns": {
-    "route_entry": { "tileX": 1, "tileY": 1 }
+    "route_entry": {
+      "tileX": 1,
+      "tileY": 1
+    }
   },
   "transitions": [
-    { "tileKey": "0:1", "toMapId": "town", "toSpawnId": "to_route" }
+    {
+      "tileKey": "0:1",
+      "toMapId": "town",
+      "toSpawnId": "to_route"
+    }
   ],
   "npcs": [
     {

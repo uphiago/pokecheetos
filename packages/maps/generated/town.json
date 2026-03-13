@@ -3,13 +3,26 @@
   "width": 20,
   "height": 20,
   "defaultSpawnId": "town_spawn",
-  "blockedTiles": ["4:4", "4:5"],
+  "blockedTiles": [
+    "4:4",
+    "4:5"
+  ],
   "spawns": {
-    "town_spawn": { "tileX": 2, "tileY": 2 },
-    "to_route": { "tileX": 10, "tileY": 1 }
+    "town_spawn": {
+      "tileX": 2,
+      "tileY": 2
+    },
+    "to_route": {
+      "tileX": 10,
+      "tileY": 1
+    }
   },
   "transitions": [
-    { "tileKey": "10:0", "toMapId": "route-1", "toSpawnId": "route_entry" }
+    {
+      "tileKey": "10:0",
+      "toMapId": "route-1",
+      "toSpawnId": "route_entry"
+    }
   ],
   "npcs": [
     {
