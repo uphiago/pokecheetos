@@ -29,8 +29,8 @@ async function main() {
 main().catch((error) => {
   logger.error(
     {
-      event: 'server_boot_failed',
-      phase: 'startup',
+      event: 'server_startup',
+      errorCode: 'SERVER_STARTUP_FAILED',
       error
     },
     'server startup failed'

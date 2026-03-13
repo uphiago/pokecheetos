@@ -1,38 +1,37 @@
 import type { FastifyInstance } from 'fastify';
 import type { GuestBootstrapErrorResponse, GuestBootstrapRequest } from '@pokecheetos/shared';
 import type { SessionService } from '../../services/session-service';
-import { logger } from '../../logging/logger';
+import { logger as defaultLogger, type Logger } from '../../logging/logger';
 
-export async function registerGuestBootstrapRoute(app: FastifyInstance, sessionService: SessionService) {
+export async function registerGuestBootstrapRoute(
+  app: FastifyInstance,
+  sessionService: SessionService,
+  logger: Logger = defaultLogger
+) {
   app.post<{ Body: GuestBootstrapRequest }>('/api/session/guest', async (request, reply) => {
     const hasGuestToken = typeof request.body?.guestToken === 'string' && request.body.guestToken.trim().length > 0;
 
     try {
       const result = sessionService.bootstrapGuest(request.body ?? {});
-      const response = {
-        ...result,
-        requestId: request.id
-      };
       logger.info(
         {
-          event: 'guest_bootstrap_succeeded',
+          event: 'guest_bootstrap',
           phase: 'bootstrap',
           requestId: request.id,
-          hasGuestToken,
           guestId: result.guestId,
-          mapId: result.mapId,
-          roomId: result.roomIdHint
+          roomId: result.roomIdHint,
+          mapId: result.mapId
         },
         'guest bootstrap success'
       );
-      return response;
+      return result;
     } catch (error) {
       logger.error(
         {
-          event: 'guest_bootstrap_failed',
+          event: 'guest_bootstrap',
           phase: 'bootstrap',
           requestId: request.id,
-          hasGuestToken,
+          errorCode: 'BOOTSTRAP_FAILED',
           error
         },
         'guest bootstrap failed'

@@ -123,31 +123,48 @@ export class WorldRoom extends Room<WorldState> {
     }, this.patchRate);
   }
 
-  onJoin(client: Pick<Client, 'sessionId' | 'leave'>, options: GuestBootstrapResponse): void {
-    this.cleanupExpiredReconnectReservations();
+  async onJoin(client: Pick<Client, 'sessionId' | 'leave'>, options: GuestBootstrapResponse): Promise<void> {
+    try {
+      this.cleanupExpiredReconnectReservations();
 
-    const registration = this.presenceService.register({
-      connectionId: client.sessionId,
-      guestId: options.guestId,
-      roomId: this.roomId
-    });
+      const registration = this.presenceService.register({
+        connectionId: client.sessionId,
+        guestId: options.guestId,
+        roomId: this.roomId
+      });
 
-    if (registration.displaced) {
-      const displacedClient = this.clientRegistry.get(registration.displaced.connectionId);
-      displacedClient?.removePlayerState();
-      this.clientRegistry.delete(registration.displaced.connectionId);
-      displacedClient?.leave(4000, 'duplicate guest connection');
+      if (registration.displaced) {
+        const displacedClient = this.clientRegistry.get(registration.displaced.connectionId);
+        displacedClient?.removePlayerState();
+        this.clientRegistry.delete(registration.displaced.connectionId);
+        displacedClient?.leave(4000, 'duplicate guest connection');
+      }
+
+      const playerState = this.resolveJoinPlayerState(options);
+      this.state.players.set(client.sessionId, playerState);
+      this.sanitizeSchemaPlayers();
+
+      this.clientRegistry.set(client.sessionId, {
+        leave: (code?: number, data?: string) => client.leave(code, data),
+        removePlayerState: () => this.removePlayerState(client.sessionId)
+      });
+    } catch (error) {
+      logger.error(
+        {
+          event: 'room_join_failed',
+          phase: 'join',
+          requestId: options.requestId,
+          guestId: options.guestId,
+          sessionId: client.sessionId,
+          roomId: this.state?.roomId ?? this.roomId,
+          mapId: options.mapId ?? this.state?.mapId,
+          error
+        },
+        'room join failed'
+      );
+      this.safeLeaveClient(client, 'room join failed');
+      throw error;
     }
-
-    const playerState = this.resolveJoinPlayerState(options);
-    this.state.players.set(client.sessionId, playerState);
-    this.sanitizeSchemaPlayers();
-
-    this.clientRegistry.set(client.sessionId, {
-      leave: (code?: number, data?: string) => client.leave(code, data),
-      removePlayerState: () => this.removePlayerState(client.sessionId)
-    });
-
   }
 
   onLeave(client: Pick<Client, 'sessionId'>, consented?: boolean): void {
@@ -298,8 +315,8 @@ export class WorldRoom extends Room<WorldState> {
           phase: 'serialize',
           guestId: player?.guestId,
           sessionId: client.sessionId,
-          roomId: this.roomId,
-          mapId: player?.mapId ?? this.state.mapId,
+          roomId: this.state?.roomId ?? this.roomId,
+          mapId: player?.mapId ?? this.state?.mapId,
           error
         },
         'room full state serialization failed'
@@ -317,8 +334,8 @@ export class WorldRoom extends Room<WorldState> {
         {
           event: 'room_state_patch_failed',
           phase: 'serialize',
-          roomId: this.roomId,
-          mapId: this.state.mapId,
+          roomId: this.state?.roomId ?? this.roomId,
+          mapId: this.state?.mapId,
           sessionIds: this.clients.map((client) => client.sessionId),
           guestIds: this.clients
             .map((client) => this.state.players.get(client.sessionId)?.guestId)

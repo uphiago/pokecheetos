@@ -208,7 +208,7 @@ describe('RoomConnectionManager', () => {
         }
 
         assert.equal(error.code, 'room_connect_failed');
-        assert.deepEqual(error.attemptedRoomIdHints, ['town:base:1', 'town:base:1']);
+        assert.equal(error.roomIdHint, 'town:base:1');
         assert.equal(error.cause instanceof Error ? error.cause.message : '', 'room join failed');
         return true;
       }

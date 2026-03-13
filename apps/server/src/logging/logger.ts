@@ -1,32 +1,103 @@
-type LogContext = Record<string, unknown>;
+type LogLevel = 'info' | 'error';
 
-function normalizeLogContext(context: LogContext): LogContext {
-  const normalizedContext: LogContext = {};
+type LogContext = {
+  event?: string;
+  requestId?: string;
+  guestId?: string;
+  roomId?: string;
+  mapId?: string;
+  phase?: 'bootstrap' | 'join' | 'simulate' | 'interact' | 'leave';
+  errorCode?: string;
+  error?: unknown;
+  [key: string]: unknown;
+};
 
-  for (const [key, value] of Object.entries(context)) {
-    if (key === 'error' && value instanceof Error) {
-      normalizedContext.errorName = value.name;
-      normalizedContext.errorMessage = value.message;
-      if ('code' in value && typeof value.code === 'string') {
-        normalizedContext.errorCode = value.code;
-      }
-      if (typeof value.stack === 'string') {
-        normalizedContext.errorStack = value.stack;
-      }
-      continue;
+type LogSink = (message: string) => void;
+
+export type Logger = ReturnType<typeof createLogger>;
+
+export function createLogger(options: {
+  env?: string;
+  infoSink?: LogSink;
+  errorSink?: LogSink;
+} = {}) {
+  const env = options.env ?? process.env.NODE_ENV ?? 'development';
+  const infoSink = options.infoSink ?? ((message: string) => console.log(message));
+  const errorSink = options.errorSink ?? ((message: string) => console.error(message));
+
+  return {
+    info(context: LogContext, message: string) {
+      infoSink(serializeLog('info', message, context, env));
+    },
+    error(context: LogContext, message: string) {
+      errorSink(serializeLog('error', message, context, env));
     }
-
-    normalizedContext[key] = value;
-  }
-
-  return normalizedContext;
+  };
 }
 
-export const logger = {
-  info(context: LogContext, message: string) {
-    console.log(JSON.stringify({ level: 'info', message, ...normalizeLogContext(context) }));
-  },
-  error(context: LogContext, message: string) {
-    console.error(JSON.stringify({ level: 'error', message, ...normalizeLogContext(context) }));
+export const logger = createLogger();
+
+function serializeLog(level: LogLevel, message: string, context: LogContext, env: string): string {
+  const { error, ...rest } = context;
+  const safeContext = omitReservedFields(rest);
+  const payload: Record<string, unknown> = {
+    ...safeContext,
+    level,
+    message
+  };
+
+  if (error instanceof Error) {
+    payload.errorName = error.name;
+    payload.errorMessage = error.message;
+
+    if (env === 'development') {
+      payload.errorStack = error.stack;
+    }
+  } else if (error !== undefined) {
+    payload.errorMessage = serializeUnknownError(error);
+
+    if (typeof error === 'object' && error !== null) {
+      payload.errorDetails = normalizeUnknownErrorDetails(error);
+    }
   }
-};
+
+  return JSON.stringify(payload);
+}
+
+function omitReservedFields(context: Record<string, unknown>): Record<string, unknown> {
+  const {
+    level: _level,
+    message: _message,
+    errorMessage: _errorMessage,
+    errorName: _errorName,
+    errorStack: _errorStack,
+    errorDetails: _errorDetails,
+    ...safeContext
+  } = context;
+
+  return safeContext;
+}
+
+function serializeUnknownError(error: unknown): string {
+  if (typeof error === 'string') {
+    return error;
+  }
+
+  if (typeof error === 'object' && error !== null) {
+    try {
+      return JSON.stringify(error);
+    } catch {
+      return '[unserializable error object]';
+    }
+  }
+
+  return String(error);
+}
+
+function normalizeUnknownErrorDetails(error: object): unknown {
+  try {
+    return JSON.parse(JSON.stringify(error));
+  } catch {
+    return '[unserializable error object]';
+  }
+}
