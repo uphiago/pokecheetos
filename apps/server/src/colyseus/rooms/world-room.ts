@@ -9,6 +9,7 @@ import type {
   RoomErrorEvent,
   MapTransitionEvent
 } from '@pokecheetos/shared';
+import { isTileVisible } from '@pokecheetos/shared';
 import { createNpcInteractionService, type NpcInteractionService } from '../../services/npc-interaction-service';
 import {
   createWorldSimulationService,
@@ -38,6 +39,7 @@ export class WorldRoom extends Room<WorldState> {
   private readonly worldSimulationService: Pick<WorldSimulationService, 'simulateStep'>;
   private readonly loadMapById: (mapId: string) => ReturnType<typeof loadCompiledMap>;
   private readonly movementInputs = new Map<string, MovementInputState>();
+  private readonly visibilityByClient = new Map<string, Set<string>>();
 
   constructor(dependencies: WorldRoomDependencies = {}) {
     super();
@@ -84,6 +86,15 @@ export class WorldRoom extends Room<WorldState> {
         this.simulateStepForClient(client);
       }
     }, this.patchRate);
+  }
+
+  onLeave(client: Pick<Client, 'sessionId'>): void {
+    this.movementInputs.delete(client.sessionId);
+    this.visibilityByClient.delete(client.sessionId);
+
+    for (const visibleSet of this.visibilityByClient.values()) {
+      visibleSet.delete(client.sessionId);
+    }
   }
 
   handleMoveIntent(
@@ -161,6 +172,8 @@ export class WorldRoom extends Room<WorldState> {
       this.consumeBufferedDirection(client.sessionId);
     }
 
+    this.computeVisibilityDiff(client.sessionId);
+
     if (simulationResult.transition) {
       const transitionEvent: MapTransitionEvent = {
         type: 'map_transition',
@@ -169,6 +182,44 @@ export class WorldRoom extends Room<WorldState> {
       };
       client.send(transitionEvent.type, transitionEvent);
     }
+  }
+
+  computeVisibilityDiff(clientSessionId: string): { entered: string[]; left: string[] } {
+    const observer = this.state.players.get(clientSessionId);
+    if (!observer) {
+      this.visibilityByClient.delete(clientSessionId);
+      return { entered: [], left: [] };
+    }
+
+    const visibleNow = new Set<string>();
+
+    for (const [otherSessionId, otherPlayer] of this.state.players.entries()) {
+      if (otherSessionId === clientSessionId) {
+        continue;
+      }
+
+      if (otherPlayer.mapId !== observer.mapId) {
+        continue;
+      }
+
+      if (
+        isTileVisible(
+          { tileX: observer.tileX, tileY: observer.tileY },
+          { tileX: otherPlayer.tileX, tileY: otherPlayer.tileY },
+          runtimeConfig.visibilityWindow
+        )
+      ) {
+        visibleNow.add(otherSessionId);
+      }
+    }
+
+    const previouslyVisible = this.visibilityByClient.get(clientSessionId) ?? new Set<string>();
+    const entered = [...visibleNow].filter((id) => !previouslyVisible.has(id));
+    const left = [...previouslyVisible].filter((id) => !visibleNow.has(id));
+
+    this.visibilityByClient.set(clientSessionId, visibleNow);
+
+    return { entered, left };
   }
 
   handleNpcInteract(client: Pick<Client, 'sessionId' | 'send'>, npcId: string): void {

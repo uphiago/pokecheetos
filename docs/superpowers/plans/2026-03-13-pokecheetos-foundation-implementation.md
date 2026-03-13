@@ -1231,3 +1231,10 @@ Plan complete and saved to `docs/superpowers/plans/2026-03-13-pokecheetos-founda
   - `pnpm --filter @pokecheetos/server test -- apps/server/src/colyseus/rooms/world-room.test.ts` ✅
   - `pnpm --filter @pokecheetos/server typecheck` ✅
   - Notes: reconnect reservation and visibility enter/leave coverage still pending for complete Task 7 closure.
+- [x] 2026-03-13 06:50 BRT — task 7 visibility diff coverage block
+  - Added `WorldRoom.computeVisibilityDiff()` backed by `runtimeConfig.visibilityWindow` + `isTileVisible` to track enter/leave deltas for same-map players.
+  - Wired simulation loop to refresh per-client visibility snapshots and added room leave cleanup for movement/visibility state.
+  - Added focused `world-room.test.ts` coverage for visibility enter/leave behavior (same-map only, configured rectangle bounds).
+  - `pnpm --filter @pokecheetos/server test -- apps/server/src/colyseus/rooms/world-room.test.ts` ✅
+  - `pnpm --filter @pokecheetos/server typecheck` ✅
+  - Notes: reconnect reservation/duplicate-guest room-level wiring remains pending for full Task 7 parity with the original checklist.

@@ -100,6 +100,63 @@ describe('WorldRoom simulation', () => {
   });
 });
 
+describe('WorldRoom visibility', () => {
+  it('tracks visibility enter/leave using the configured rectangle on the same map', () => {
+    const room = new WorldRoom();
+
+    const observer = new PlayerState();
+    observer.guestId = 'guest-observer';
+    observer.displayName = 'Observer';
+    observer.mapId = 'town';
+    observer.tileX = 10;
+    observer.tileY = 10;
+    observer.direction = 'down';
+
+    const nearby = new PlayerState();
+    nearby.guestId = 'guest-nearby';
+    nearby.displayName = 'Nearby';
+    nearby.mapId = 'town';
+    nearby.tileX = 20;
+    nearby.tileY = 20;
+    nearby.direction = 'left';
+
+    const farAway = new PlayerState();
+    farAway.guestId = 'guest-far';
+    farAway.displayName = 'Far Away';
+    farAway.mapId = 'town';
+    farAway.tileX = 40;
+    farAway.tileY = 40;
+    farAway.direction = 'up';
+
+    const otherMap = new PlayerState();
+    otherMap.guestId = 'guest-other-map';
+    otherMap.displayName = 'Other Map';
+    otherMap.mapId = 'route-1';
+    otherMap.tileX = 10;
+    otherMap.tileY = 10;
+    otherMap.direction = 'right';
+
+    room.state = {
+      players: new Map([
+        ['observer', observer],
+        ['nearby', nearby],
+        ['far-away', farAway],
+        ['other-map', otherMap]
+      ]),
+      mapId: 'town',
+      roomId: 'town:base:1'
+    } as any;
+
+    expect(room.computeVisibilityDiff('observer')).toEqual({ entered: ['nearby'], left: [] });
+    expect(room.computeVisibilityDiff('observer')).toEqual({ entered: [], left: [] });
+
+    nearby.tileX = 41;
+    nearby.tileY = 41;
+
+    expect(room.computeVisibilityDiff('observer')).toEqual({ entered: [], left: ['nearby'] });
+  });
+});
+
 describe('WorldRoom npc_interact', () => {
   it('sends npc_dialogue when interaction is valid', () => {
     const room = new WorldRoom();
