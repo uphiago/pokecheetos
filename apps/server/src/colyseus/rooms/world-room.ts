@@ -99,7 +99,6 @@ export class WorldRoom extends Room<WorldState> {
     this.autoDispose = false;
     this.maxClients = options.maxClients;
     this.patchRate = Math.round(1_000 / runtimeConfig.serverTickRate);
-    this.roomId = options.roomId;
     this.setState(
       new WorldState({
         mapId: options.mapId,
