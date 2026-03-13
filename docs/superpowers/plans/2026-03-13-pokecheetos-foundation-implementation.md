@@ -1224,3 +1224,10 @@ Plan complete and saved to `docs/superpowers/plans/2026-03-13-pokecheetos-founda
   - `pnpm --filter @pokecheetos/server test -- apps/server/src/colyseus/rooms/world-room.test.ts` ✅
   - `pnpm --filter @pokecheetos/server typecheck` ✅
   - Notes: groundwork complete; full room simulation tick/reconnect/visibility assertions still pending for full Task 7 closure.
+- [x] 2026-03-13 06:29 BRT — task 7 simulation application block
+  - Added `WorldRoom.simulateStepForClient()` to apply authoritative simulation output into room state, consume one-step buffered input, and emit typed `map_transition` events.
+  - Wired room simulation interval to execute per connected client at room patch rate.
+  - Added focused test covering simulation call payload, buffered-direction consumption, state mutation, and transition event emission.
+  - `pnpm --filter @pokecheetos/server test -- apps/server/src/colyseus/rooms/world-room.test.ts` ✅
+  - `pnpm --filter @pokecheetos/server typecheck` ✅
+  - Notes: reconnect reservation and visibility enter/leave coverage still pending for complete Task 7 closure.

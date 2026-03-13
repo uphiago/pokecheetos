@@ -6,9 +6,14 @@ import type {
   MoveIntentCommand,
   NpcInteractCommand,
   NpcDialogueEvent,
-  RoomErrorEvent
+  RoomErrorEvent,
+  MapTransitionEvent
 } from '@pokecheetos/shared';
 import { createNpcInteractionService, type NpcInteractionService } from '../../services/npc-interaction-service';
+import {
+  createWorldSimulationService,
+  type WorldSimulationService
+} from '../../services/world-simulation-service';
 import { WorldState } from '../schema/world-state';
 
 export type WorldRoomOptions = Readonly<{
@@ -22,15 +27,36 @@ type MovementInputState = {
   bufferedDirection?: Direction;
 };
 
+type WorldRoomDependencies = {
+  npcInteractionService?: NpcInteractionService;
+  worldSimulationService?: Pick<WorldSimulationService, 'simulateStep'>;
+  loadMapById?: (mapId: string) => ReturnType<typeof loadCompiledMap>;
+};
+
 export class WorldRoom extends Room<WorldState> {
   private readonly npcInteractionService: NpcInteractionService;
+  private readonly worldSimulationService: Pick<WorldSimulationService, 'simulateStep'>;
+  private readonly loadMapById: (mapId: string) => ReturnType<typeof loadCompiledMap>;
   private readonly movementInputs = new Map<string, MovementInputState>();
 
-  constructor() {
+  constructor(dependencies: WorldRoomDependencies = {}) {
     super();
-    this.npcInteractionService = createNpcInteractionService({
-      resolveDialogueLines: (textId) => [textId]
-    });
+    this.npcInteractionService =
+      dependencies.npcInteractionService ??
+      createNpcInteractionService({
+        resolveDialogueLines: (textId) => [textId]
+      });
+    this.worldSimulationService =
+      dependencies.worldSimulationService ??
+      createWorldSimulationService({
+        updateLastKnownState() {
+          // Persistence wiring will inject the real repository in a future room factory.
+        },
+        updateLastSeenAt() {
+          // Persistence wiring will inject the real repository in a future room factory.
+        }
+      });
+    this.loadMapById = dependencies.loadMapById ?? loadCompiledMap;
   }
 
   onCreate(options: WorldRoomOptions) {
@@ -52,6 +78,12 @@ export class WorldRoom extends Room<WorldState> {
     this.onMessage('npc_interact', (client: Client, message: NpcInteractCommand) => {
       this.handleNpcInteract(client, message.npcId);
     });
+
+    this.setSimulationInterval(() => {
+      for (const client of this.clients) {
+        this.simulateStepForClient(client);
+      }
+    }, this.patchRate);
   }
 
   handleMoveIntent(
@@ -99,6 +131,46 @@ export class WorldRoom extends Room<WorldState> {
     this.movementInputs.set(clientSessionId, current);
   }
 
+  simulateStepForClient(client: Pick<Client, 'sessionId' | 'send'>): void {
+    const player = this.state.players.get(client.sessionId);
+    if (!player) {
+      return;
+    }
+
+    const movementInput = this.getMovementInput(client.sessionId);
+    const simulationResult = this.worldSimulationService.simulateStep({
+      guestId: player.guestId,
+      heldDirection: movementInput.heldDirection,
+      bufferedDirection: movementInput.bufferedDirection,
+      player: {
+        mapId: player.mapId,
+        tileX: player.tileX,
+        tileY: player.tileY,
+        direction: player.direction
+      },
+      compiledMap: this.loadMapById(player.mapId || this.state.mapId),
+      loadMapById: this.loadMapById
+    });
+
+    player.mapId = simulationResult.player.mapId;
+    player.tileX = simulationResult.player.tileX;
+    player.tileY = simulationResult.player.tileY;
+    player.direction = simulationResult.player.direction;
+
+    if (simulationResult.consumedBufferedDirection) {
+      this.consumeBufferedDirection(client.sessionId);
+    }
+
+    if (simulationResult.transition) {
+      const transitionEvent: MapTransitionEvent = {
+        type: 'map_transition',
+        mapId: simulationResult.transition.mapId,
+        roomIdHint: simulationResult.transition.roomIdHint
+      };
+      client.send(transitionEvent.type, transitionEvent);
+    }
+  }
+
   handleNpcInteract(client: Pick<Client, 'sessionId' | 'send'>, npcId: string): void {
     const player = this.state.players.get(client.sessionId);
     if (!player) {
@@ -106,7 +178,7 @@ export class WorldRoom extends Room<WorldState> {
       return;
     }
 
-    const compiledMap = loadCompiledMap(player.mapId || this.state.mapId);
+    const compiledMap = this.loadMapById(player.mapId || this.state.mapId);
     const result = this.npcInteractionService.interact({
       compiledMap,
       npcId,
