@@ -619,7 +619,7 @@ git commit -m "feat: add shared grid and protocol contracts"
 - Test: `packages/maps/src/runtime/transitions.test.ts`
 - Test: `packages/maps/src/runtime/npcs.test.ts`
 
-- [ ] **Step 1: Write the failing map compiler and runtime tests**
+- [x] **Step 1: Write the failing map compiler and runtime tests**
 
 Create `packages/maps/src/compiler/compile-map.test.ts` with cases for:
 
@@ -636,12 +636,12 @@ Create `packages/maps/src/runtime/transitions.test.ts` with assertions that `fin
 
 Create `packages/maps/src/runtime/npcs.test.ts` with assertions that `getNpcById()` returns blocking NPC metadata and `textId`.
 
-- [ ] **Step 2: Run tests to verify they fail**
+- [x] **Step 2: Run tests to verify they fail**
 
 Run: `pnpm exec vitest run packages/maps/src/compiler/compile-map.test.ts packages/maps/src/runtime/map-registry.test.ts packages/maps/src/runtime/collision.test.ts packages/maps/src/runtime/transitions.test.ts packages/maps/src/runtime/npcs.test.ts`
 Expected: FAIL because the maps package does not exist yet
 
-- [ ] **Step 3: Create the package, compiler, and runtime helpers**
+- [x] **Step 3: Create the package, compiler, and runtime helpers**
 
 Create `packages/maps/package.json` with scripts `test`, `typecheck`, and `build:maps`.
 
@@ -670,7 +670,7 @@ Expected: PASS
 Run: `pnpm --filter @pokecheetos/maps typecheck`
 Expected: PASS
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add packages/maps
@@ -1326,6 +1326,11 @@ Plan complete and saved to `docs/superpowers/plans/2026-03-13-pokecheetos-founda
 - [x] 2026-03-13 12:16 BRT — task 4 artifact emission + typecheck verification block
   - Added `tsx` as a local dev dependency of `@pokecheetos/maps` to guarantee `build:maps` availability from package scope.
   - Re-emitted compiled artifacts via `pnpm --filter @pokecheetos/maps exec tsx src/compiler/write-compiled-maps.ts`.
+  - `pnpm --filter @pokecheetos/maps test` ✅
+  - `pnpm --filter @pokecheetos/maps typecheck` ✅
+  - Notes: no blocking issue found in this block.
+- [x] 2026-03-13 12:28 BRT — task 4 checklist closure verification block
+  - Reconciled Task 4 Step 1/2/3/6 checklist state with already-landed `@pokecheetos/maps` compiler/runtime implementation.
   - `pnpm --filter @pokecheetos/maps test` ✅
   - `pnpm --filter @pokecheetos/maps typecheck` ✅
   - Notes: no blocking issue found in this block.
