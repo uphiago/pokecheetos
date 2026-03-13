@@ -9,7 +9,9 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
+    "@colyseus/ws-transport": "^0.16.5",
     "@colyseus/schema": "^3.0.0",
+    "@fastify/cors": "^10.1.0",
     "@pokecheetos/config": "workspace:*",
     "@pokecheetos/maps": "workspace:*",
     "@pokecheetos/shared": "workspace:*",

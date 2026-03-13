@@ -4,6 +4,7 @@
   "packageManager": "pnpm@10.6.0",
   "scripts": {
     "build": "turbo run build",
+    "build:high-memory": "node ./scripts/build-high-memory.mjs",
     "dev": "turbo run dev --parallel",
     "lint": "turbo run lint",
     "test": "turbo run test",

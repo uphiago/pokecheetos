@@ -2,9 +2,16 @@ import { MapSchema, Schema, defineTypes } from '@colyseus/schema';
 import { PlayerState } from './player-state';
 
 export class WorldState extends Schema {
-  mapId = '';
-  roomId = '';
-  players = new MapSchema<PlayerState>();
+  declare mapId: string;
+  declare roomId: string;
+  declare players: MapSchema<PlayerState>;
+
+  constructor() {
+    super();
+    this.mapId = '';
+    this.roomId = '';
+    this.players = new MapSchema<PlayerState>();
+  }
 }
 
 defineTypes(WorldState, {

@@ -1,6 +1,7 @@
 export type GuestBootstrapRequest = { guestToken?: string };
 
 export type GuestBootstrapResponse = {
+  requestId?: string;
   guestId: string;
   guestToken: string;
   displayName: string;

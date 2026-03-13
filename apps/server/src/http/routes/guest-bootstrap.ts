@@ -1,16 +1,41 @@
 import type { FastifyInstance } from 'fastify';
 import type { GuestBootstrapErrorResponse, GuestBootstrapRequest } from '@pokecheetos/shared';
 import type { SessionService } from '../../services/session-service';
-import { logger } from '../../logging/logger';
+import { logger as defaultLogger, type Logger } from '../../logging/logger';
 
-export async function registerGuestBootstrapRoute(app: FastifyInstance, sessionService: SessionService) {
+export async function registerGuestBootstrapRoute(
+  app: FastifyInstance,
+  sessionService: SessionService,
+  logger: Logger = defaultLogger
+) {
   app.post<{ Body: GuestBootstrapRequest }>('/api/session/guest', async (request, reply) => {
+    const hasGuestToken = typeof request.body?.guestToken === 'string' && request.body.guestToken.trim().length > 0;
+
     try {
       const result = sessionService.bootstrapGuest(request.body ?? {});
-      logger.info({ guestId: result.guestId, mapId: result.mapId }, 'guest bootstrap success');
+      logger.info(
+        {
+          event: 'guest_bootstrap',
+          phase: 'bootstrap',
+          requestId: request.id,
+          guestId: result.guestId,
+          roomId: result.roomIdHint,
+          mapId: result.mapId
+        },
+        'guest bootstrap success'
+      );
       return result;
     } catch (error) {
-      logger.error({ error }, 'guest bootstrap failed');
+      logger.error(
+        {
+          event: 'guest_bootstrap',
+          phase: 'bootstrap',
+          requestId: request.id,
+          errorCode: 'BOOTSTRAP_FAILED',
+          error
+        },
+        'guest bootstrap failed'
+      );
       const payload: GuestBootstrapErrorResponse = {
         code: 'bootstrap_failed',
         message: 'Failed to bootstrap guest session'

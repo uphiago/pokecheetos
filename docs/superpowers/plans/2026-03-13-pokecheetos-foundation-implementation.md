@@ -280,7 +280,7 @@ git commit -m "chore: scaffold workspace and toolchain"
 - Create: `packages/config/src/index.ts`
 - Test: `packages/config/src/runtime.test.ts`
 
-- [ ] **Step 1: Write the failing runtime constants test**
+- [x] **Step 1: Write the failing runtime constants test**
 
 Create `packages/config/src/runtime.test.ts`:
 
@@ -302,7 +302,7 @@ describe('runtimeConfig', () => {
 Run: `pnpm exec vitest run packages/config/src/runtime.test.ts`
 Expected: FAIL because the config package does not exist yet
 
-- [ ] **Step 2: Create package and config files**
+- [x] **Step 2: Create package and config files**
 
 Create `packages/config/package.json`:
 
@@ -403,7 +403,7 @@ Create `packages/config/src/index.ts`:
 export * from './runtime';
 ```
 
-- [ ] **Step 3: Verify package-local loading**
+- [x] **Step 3: Verify package-local loading**
 
 Run: `pnpm exec vitest run packages/config/src/runtime.test.ts`
 Expected: PASS
@@ -414,7 +414,7 @@ Expected: PASS
 Run: `pnpm exec node -e "import('./packages/config/src/index.ts').then((m) => console.log(m.runtimeConfig.roomCapacity))"`
 Expected: PASS and prints `50`
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add packages/config
@@ -440,7 +440,7 @@ git commit -m "feat: add shared config and runtime constants"
 - Test: `packages/shared/src/protocol/server-to-client.test.ts`
 - Test: `packages/shared/src/world/visibility.test.ts`
 
-- [ ] **Step 1: Write the failing helper and protocol tests**
+- [x] **Step 1: Write the failing helper and protocol tests**
 
 Create `packages/shared/src/grid/tiles.test.ts` with tile movement and tile-to-pixel assertions.
 
@@ -462,12 +462,12 @@ Create `packages/shared/src/protocol/server-to-client.test.ts` with assertions f
 
 Create `packages/shared/src/world/visibility.test.ts` with rectangle include/exclude assertions.
 
-- [ ] **Step 2: Run tests to verify they fail**
+- [x] **Step 2: Run tests to verify they fail**
 
 Run: `pnpm exec vitest run packages/shared/src/grid/tiles.test.ts packages/shared/src/protocol/session.test.ts packages/shared/src/protocol/client-to-server.test.ts packages/shared/src/protocol/server-to-client.test.ts packages/shared/src/world/visibility.test.ts`
 Expected: FAIL because the shared package does not exist yet
 
-- [ ] **Step 3: Create the package and exact source files**
+- [x] **Step 3: Create the package and exact source files**
 
 Create `packages/shared/package.json`:
 
@@ -577,7 +577,7 @@ Create `packages/shared/src/world/visibility.ts` with `VisibilityWindow` and `is
 
 Create `packages/shared/src/index.ts` exporting all exact modules above.
 
-- [ ] **Step 4: Verify the package**
+- [x] **Step 4: Verify the package**
 
 Run: `pnpm --filter @pokecheetos/shared test`
 Expected: PASS
@@ -585,7 +585,7 @@ Expected: PASS
 Run: `pnpm --filter @pokecheetos/shared typecheck`
 Expected: PASS
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add packages/shared
@@ -619,7 +619,7 @@ git commit -m "feat: add shared grid and protocol contracts"
 - Test: `packages/maps/src/runtime/transitions.test.ts`
 - Test: `packages/maps/src/runtime/npcs.test.ts`
 
-- [ ] **Step 1: Write the failing map compiler and runtime tests**
+- [x] **Step 1: Write the failing map compiler and runtime tests**
 
 Create `packages/maps/src/compiler/compile-map.test.ts` with cases for:
 
@@ -636,12 +636,12 @@ Create `packages/maps/src/runtime/transitions.test.ts` with assertions that `fin
 
 Create `packages/maps/src/runtime/npcs.test.ts` with assertions that `getNpcById()` returns blocking NPC metadata and `textId`.
 
-- [ ] **Step 2: Run tests to verify they fail**
+- [x] **Step 2: Run tests to verify they fail**
 
 Run: `pnpm exec vitest run packages/maps/src/compiler/compile-map.test.ts packages/maps/src/runtime/map-registry.test.ts packages/maps/src/runtime/collision.test.ts packages/maps/src/runtime/transitions.test.ts packages/maps/src/runtime/npcs.test.ts`
 Expected: FAIL because the maps package does not exist yet
 
-- [ ] **Step 3: Create the package, compiler, and runtime helpers**
+- [x] **Step 3: Create the package, compiler, and runtime helpers**
 
 Create `packages/maps/package.json` with scripts `test`, `typecheck`, and `build:maps`.
 
@@ -657,7 +657,7 @@ Implement:
 
 Generated JSON is committed to the repo and also reproducible via `build:maps`.
 
-- [ ] **Step 4: Emit and consume compiled artifacts**
+- [x] **Step 4: Emit and consume compiled artifacts**
 
 Run: `pnpm --filter @pokecheetos/maps exec tsx src/compiler/write-compiled-maps.ts`
 Expected: PASS, compiled JSON written to `packages/maps/generated/*.json`
@@ -665,12 +665,12 @@ Expected: PASS, compiled JSON written to `packages/maps/generated/*.json`
 Run: `pnpm --filter @pokecheetos/maps test`
 Expected: PASS
 
-- [ ] **Step 5: Verify package typecheck**
+- [x] **Step 5: Verify package typecheck**
 
 Run: `pnpm --filter @pokecheetos/maps typecheck`
 Expected: PASS
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add packages/maps
@@ -689,7 +689,7 @@ git commit -m "feat: add compiled map pipeline and runtime registry"
 - Create: `apps/server/src/persistence/migrations/0001_initial.sql`
 - Test: `apps/server/src/persistence/repositories/player-repository.test.ts`
 
-- [ ] **Step 1: Write the failing repository tests**
+- [x] **Step 1: Write the failing repository tests**
 
 Create `apps/server/src/persistence/repositories/player-repository.test.ts` with cases for:
 
@@ -698,12 +698,12 @@ Create `apps/server/src/persistence/repositories/player-repository.test.ts` with
 - `updateLastKnownState()` persists `lastMapId`, `lastTileX`, `lastTileY`, and `lastDirection`
 - `updateLastSeenAt()` updates `lastSeenAt`
 
-- [ ] **Step 2: Run tests to verify they fail**
+- [x] **Step 2: Run tests to verify they fail**
 
 Run: `pnpm exec vitest run apps/server/src/persistence/repositories/player-repository.test.ts`
 Expected: FAIL because the server package does not exist yet
 
-- [ ] **Step 3: Create the server package and persistence dependencies**
+- [x] **Step 3: Create the server package and persistence dependencies**
 
 Create `apps/server/package.json` with exact dependencies for:
 
@@ -717,7 +717,7 @@ Create `apps/server/package.json` with exact dependencies for:
 
 Create `apps/server/tsconfig.json` and `apps/server/vitest.config.ts`.
 
-- [ ] **Step 4: Implement migrations, DB initialization, and repository**
+- [x] **Step 4: Implement migrations, DB initialization, and repository**
 
 Create `apps/server/src/persistence/migrations/0001_initial.sql` with the `players` table.
 
@@ -734,7 +734,7 @@ Create `player-repository.ts` methods:
 - `updateLastKnownState()`
 - `updateLastSeenAt()`
 
-- [ ] **Step 5: Verify persistence tests and typecheck**
+- [x] **Step 5: Verify persistence tests and typecheck**
 
 Run: `pnpm --filter @pokecheetos/server test -- apps/server/src/persistence/repositories/player-repository.test.ts`
 Expected: PASS
@@ -742,7 +742,7 @@ Expected: PASS
 Run: `pnpm --filter @pokecheetos/server typecheck`
 Expected: PASS
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add apps/server/package.json apps/server/tsconfig.json apps/server/vitest.config.ts apps/server/src/persistence
@@ -762,7 +762,7 @@ git commit -m "feat: add server scaffold and persistence"
 - Create: `apps/server/src/services/session-service.ts`
 - Test: `apps/server/src/http/routes/guest-bootstrap.test.ts`
 
-- [ ] **Step 1: Write the failing bootstrap route tests**
+- [x] **Step 1: Write the failing bootstrap route tests**
 
 Create `apps/server/src/http/routes/guest-bootstrap.test.ts` with cases for:
 
@@ -771,12 +771,12 @@ Create `apps/server/src/http/routes/guest-bootstrap.test.ts` with cases for:
 - valid token -> existing guest restored with persisted `mapId`, `tileX`, `tileY`, `roomIdHint`
 - persistence failure -> typed 5xx payload `{ code: 'bootstrap_failed', message }`
 
-- [ ] **Step 2: Run tests to verify they fail**
+- [x] **Step 2: Run tests to verify they fail**
 
 Run: `pnpm --filter @pokecheetos/server test -- apps/server/src/http/routes/guest-bootstrap.test.ts`
 Expected: FAIL because the app and routes do not exist yet
 
-- [ ] **Step 3: Implement Fastify app, route, logging, and session service**
+- [x] **Step 3: Implement Fastify app, route, logging, and session service**
 
 Implement:
 
@@ -788,12 +788,12 @@ Implement:
 
 Import runtime constants from `@pokecheetos/config`.
 
-- [ ] **Step 4: Verify tests**
+- [x] **Step 4: Verify tests**
 
 Run: `pnpm --filter @pokecheetos/server test -- apps/server/src/http/routes/guest-bootstrap.test.ts`
 Expected: PASS
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add apps/server/src/index.ts apps/server/src/http apps/server/src/logging/logger.ts apps/server/src/services/session-service.ts
@@ -813,7 +813,7 @@ git commit -m "feat: add fastify guest bootstrap api"
 - Test: `apps/server/src/services/world-simulation-service.test.ts`
 - Test: `apps/server/src/colyseus/rooms/world-room.test.ts`
 
-- [ ] **Step 1: Write the failing simulation and room tests**
+- [x] **Step 1: Write the failing simulation and room tests**
 
 Create `apps/server/src/services/world-simulation-service.test.ts` with cases for:
 
@@ -832,12 +832,12 @@ Create `apps/server/src/colyseus/rooms/world-room.test.ts` with cases for:
 - duplicate guest connection ejects the older gameplay connection
 - repository `updateLastKnownState()` and `updateLastSeenAt()` are called on authoritative movement
 
-- [ ] **Step 2: Run tests to verify they fail**
+- [x] **Step 2: Run tests to verify they fail**
 
 Run: `pnpm --filter @pokecheetos/server test -- apps/server/src/services/world-simulation-service.test.ts apps/server/src/colyseus/rooms/world-room.test.ts`
 Expected: FAIL because services and rooms do not exist yet
 
-- [ ] **Step 3: Implement services**
+- [x] **Step 3: Implement services**
 
 Create `presence-service.ts` to track active guest gameplay connections and eject older duplicates.
 
@@ -855,7 +855,7 @@ Create `world-simulation-service.ts` to:
 - validate NPC blocking
 - persist `lastMapId`, `lastTileX`, `lastTileY`, `lastDirection`, `lastSeenAt`
 
-- [ ] **Step 4: Implement Colyseus state and room message handlers**
+- [x] **Step 4: Implement Colyseus state and room message handlers**
 
 Create `player-state.ts`, `world-state.ts`, and `world-room.ts` so that:
 
@@ -866,12 +866,12 @@ Create `player-state.ts`, `world-state.ts`, and `world-room.ts` so that:
 - room emits typed `npc_dialogue`, `map_transition`, and `room_error` payloads
 - room logs join/leave/allocation/reconnect/transition events
 
-- [ ] **Step 5: Verify tests**
+- [x] **Step 5: Verify tests**
 
 Run: `pnpm --filter @pokecheetos/server test -- apps/server/src/services/world-simulation-service.test.ts apps/server/src/colyseus/rooms/world-room.test.ts`
 Expected: PASS
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add apps/server/src/services apps/server/src/colyseus
@@ -1300,4 +1300,42 @@ Plan complete and saved to `docs/superpowers/plans/2026-03-13-pokecheetos-founda
   - Reconciled Task 9 Step 1/2/3/4/5/6 checklist state with already-landed client bootstrap/session/connection commits.
   - `pnpm --filter @pokecheetos/client test -- apps/client/src/session/session-client.test.ts apps/client/src/network/room-connection-manager.test.ts apps/client/src/bootstrap/create-game.test.ts` ✅
   - `pnpm --filter @pokecheetos/client typecheck` ✅
+  - Notes: no blocking issue found in this block.
+- [x] 2026-03-13 10:47 BRT — task 6 checklist reconciliation + verification block
+  - Reconciled Task 6 Step 1/2/3/4/5 checklist state with already-landed Fastify bootstrap/session/logging implementation.
+  - `pnpm --filter @pokecheetos/server test -- apps/server/src/http/routes/guest-bootstrap.test.ts` ✅
+  - `pnpm --filter @pokecheetos/server typecheck` ✅
+  - Notes: no blocking issue found in this block.
+- [x] 2026-03-13 11:08 BRT — task 2 config package-local loading alignment block
+  - Reconciled Task 2 Step 1/2/3/4 checklist state with implemented `@pokecheetos/config` package files.
+  - Fixed package-local ESM smoke loading by exporting with explicit `.ts` extension in `packages/config/src/index.ts` and enabling `allowImportingTsExtensions` in `packages/config/tsconfig.json`.
+  - `pnpm exec vitest run packages/config/src/runtime.test.ts` ✅
+  - `pnpm exec tsc -p packages/config/tsconfig.json --noEmit` ✅
+  - `pnpm exec node -e "import('./packages/config/src/index.ts').then((m) => console.log(m.runtimeConfig.roomCapacity))"` ✅
+  - Notes: no blocking issue found in this block.
+- [x] 2026-03-13 11:27 BRT — task 7 checklist closure verification block
+  - Reconciled Task 7 Step 2/3/4/5/6 checklist state with already-landed room allocation/presence/simulation/room handler commits.
+  - `pnpm --filter @pokecheetos/server test -- apps/server/src/services/world-simulation-service.test.ts apps/server/src/colyseus/rooms/world-room.test.ts` ✅
+  - `pnpm --filter @pokecheetos/server typecheck` ✅
+  - Notes: no blocking issue found in this block.
+- [x] 2026-03-13 11:48 BRT — task 3 checklist closure verification block
+  - Reconciled Task 3 Step 1/2/3/4/5 checklist state with already-landed `@pokecheetos/shared` grid/protocol/world contracts.
+  - `pnpm --filter @pokecheetos/shared test` ✅
+  - `pnpm --filter @pokecheetos/shared typecheck` ✅
+  - Notes: no blocking issue found in this block.
+- [x] 2026-03-13 12:16 BRT — task 4 artifact emission + typecheck verification block
+  - Added `tsx` as a local dev dependency of `@pokecheetos/maps` to guarantee `build:maps` availability from package scope.
+  - Re-emitted compiled artifacts via `pnpm --filter @pokecheetos/maps exec tsx src/compiler/write-compiled-maps.ts`.
+  - `pnpm --filter @pokecheetos/maps test` ✅
+  - `pnpm --filter @pokecheetos/maps typecheck` ✅
+  - Notes: no blocking issue found in this block.
+- [x] 2026-03-13 12:28 BRT — task 4 checklist closure verification block
+  - Reconciled Task 4 Step 1/2/3/6 checklist state with already-landed `@pokecheetos/maps` compiler/runtime implementation.
+  - `pnpm --filter @pokecheetos/maps test` ✅
+  - `pnpm --filter @pokecheetos/maps typecheck` ✅
+  - Notes: no blocking issue found in this block.
+- [x] 2026-03-13 12:47 BRT — task 5 checklist closure verification block
+  - Reconciled Task 5 Step 1/2/3/4/5/6 checklist state with already-landed server persistence scaffold/repository implementation.
+  - `pnpm --filter @pokecheetos/server test -- apps/server/src/persistence/repositories/player-repository.test.ts` ✅
+  - `pnpm --filter @pokecheetos/server typecheck` ✅
   - Notes: no blocking issue found in this block.

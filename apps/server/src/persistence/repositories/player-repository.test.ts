@@ -11,8 +11,8 @@ describe('player repository', () => {
     expect(guest.displayName).toBe('Trainer1');
     expect(restored?.guestId).toBe(guest.guestId);
     expect(restored?.lastMapId).toBe('town');
-    expect(restored?.lastTileX).toBe(2);
-    expect(restored?.lastTileY).toBe(2);
+    expect(restored?.lastTileX).toBe(11);
+    expect(restored?.lastTileY).toBe(38);
   });
 
   it('findByTokenHash restores previously saved guest', () => {

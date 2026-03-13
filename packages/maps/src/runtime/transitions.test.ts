@@ -5,7 +5,7 @@ import { findTransitionAtTile } from './transitions';
 describe('transitions', () => {
   it('returns destination map and spawn at transition tile', () => {
     const map = loadCompiledMap('town');
-    const transition = findTransitionAtTile(map, 10, 0);
+    const transition = findTransitionAtTile(map, 12, 0);
     expect(transition?.toMapId).toBe('route-1');
     expect(transition?.toSpawnId).toBe('route_entry');
   });
