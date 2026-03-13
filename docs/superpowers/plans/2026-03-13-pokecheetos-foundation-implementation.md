@@ -161,7 +161,7 @@
 - Create: `tsconfig.base.json`
 - Modify: `.gitignore`
 
-- [ ] **Step 1: Write the failing root workspace scaffold**
+- [x] **Step 1: Write the failing root workspace scaffold**
 
 Create `package.json`:
 
@@ -193,7 +193,7 @@ Create `package.json`:
 Run: `pnpm exec turbo --version`
 Expected: FAIL because dependencies are not installed yet
 
-- [ ] **Step 2: Add workspace files and ignore rules**
+- [x] **Step 2: Add workspace files and ignore rules**
 
 Create `pnpm-workspace.yaml`:
 
@@ -247,12 +247,12 @@ coverage
 *.db-wal
 ```
 
-- [ ] **Step 3: Install the root toolchain**
+- [x] **Step 3: Install the root toolchain**
 
 Run: `pnpm install`
 Expected: PASS, `pnpm-lock.yaml` created, root tools installed
 
-- [ ] **Step 4: Verify workspace bootstrap**
+- [x] **Step 4: Verify workspace bootstrap**
 
 Run: `pnpm exec turbo --version`
 Expected: PASS
@@ -260,7 +260,7 @@ Expected: PASS
 Run: `pnpm exec turbo run test --dry`
 Expected: PASS and shows an empty or no-task dry run without package errors
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add package.json pnpm-workspace.yaml turbo.json tsconfig.base.json .gitignore pnpm-lock.yaml
@@ -885,7 +885,7 @@ git commit -m "feat: add authoritative rooms and world simulation"
 - Create: `apps/server/src/loadtest/world-room.loadtest.ts`
 - Test: `apps/server/src/services/npc-interaction-service.test.ts`
 
-- [ ] **Step 1: Write the failing NPC interaction tests**
+- [x] **Step 1: Write the failing NPC interaction tests**
 
 Create `apps/server/src/services/npc-interaction-service.test.ts` with cases for:
 
@@ -894,12 +894,12 @@ Create `apps/server/src/services/npc-interaction-service.test.ts` with cases for
 - non-adjacent interaction is rejected
 - wrong-facing interaction is rejected
 
-- [ ] **Step 2: Run tests to verify they fail**
+- [x] **Step 2: Run tests to verify they fail**
 
 Run: `pnpm --filter @pokecheetos/server test -- apps/server/src/services/npc-interaction-service.test.ts`
 Expected: FAIL because the service does not exist yet
 
-- [ ] **Step 3: Implement NPC interaction service and room wiring**
+- [x] **Step 3: Implement NPC interaction service and room wiring**
 
 Create `npc-interaction-service.ts` to:
 
@@ -910,7 +910,7 @@ Create `npc-interaction-service.ts` to:
 
 Update `world-room.ts` to send `npc_dialogue` events back to the requesting client.
 
-- [ ] **Step 4: Add the parameterized load test script**
+- [x] **Step 4: Add the parameterized load test script**
 
 Create `apps/server/src/loadtest/world-room.loadtest.ts` with CLI flags:
 
@@ -925,7 +925,7 @@ The script must fail on:
 - corrupted authoritative tile state
 - out-of-window players appearing in visible state
 
-- [ ] **Step 5: Verify tests and smoke-load mode**
+- [x] **Step 5: Verify tests and smoke-load mode**
 
 Run: `pnpm --filter @pokecheetos/server test -- apps/server/src/services/npc-interaction-service.test.ts`
 Expected: PASS
@@ -933,7 +933,7 @@ Expected: PASS
 Run: `pnpm --filter @pokecheetos/server exec tsx src/loadtest/world-room.loadtest.ts --clients 5 --duration-ms 5000 --map-id town`
 Expected: PASS
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add apps/server/src/services/npc-interaction-service.ts apps/server/src/loadtest apps/server/src/services/npc-interaction-service.test.ts apps/server/src/colyseus/rooms/world-room.ts
@@ -960,7 +960,7 @@ git commit -m "feat: add npc interaction and load test baseline"
 - Test: `apps/client/src/session/session-client.test.ts`
 - Test: `apps/client/src/network/room-connection-manager.test.ts`
 
-- [ ] **Step 1: Write the failing client bootstrap tests**
+- [x] **Step 1: Write the failing client bootstrap tests**
 
 Create `apps/client/src/session/session-client.test.ts` with cases for:
 
@@ -977,12 +977,12 @@ Create `apps/client/src/network/room-connection-manager.test.ts` with cases for:
 
 Create `apps/client/src/bootstrap/create-game.test.ts` with a smoke test that verifies `createGame()` wires session bootstrap, room connection, and UI shell creation without browser E2E.
 
-- [ ] **Step 2: Run tests to verify they fail**
+- [x] **Step 2: Run tests to verify they fail**
 
 Run: `pnpm exec vitest run apps/client/src/session/session-client.test.ts apps/client/src/network/room-connection-manager.test.ts apps/client/src/bootstrap/create-game.test.ts`
 Expected: FAIL because the client package does not exist yet
 
-- [ ] **Step 3: Create the client package and boot files**
+- [x] **Step 3: Create the client package and boot files**
 
 Create `apps/client/package.json` with dependencies for `phaser`, `colyseus.js`, `vite`, `vitest`, `typescript`, and `jsdom`.
 
@@ -1008,7 +1008,7 @@ Create `apps/client/src/main.ts` and `apps/client/src/bootstrap/create-game.ts` 
 - create `ui-shell-bridge`
 - start the Phaser game
 
-- [ ] **Step 4: Implement session and connection layers**
+- [x] **Step 4: Implement session and connection layers**
 
 Create `session-client.ts` to:
 
@@ -1025,7 +1025,7 @@ Create `room-connection-manager.ts` to own:
 - same-room-first reconnect policy
 - transition-time room switching
 
-- [ ] **Step 5: Verify tests and typecheck**
+- [x] **Step 5: Verify tests and typecheck**
 
 Run: `pnpm --filter @pokecheetos/client test -- apps/client/src/session/session-client.test.ts apps/client/src/network/room-connection-manager.test.ts apps/client/src/bootstrap/create-game.test.ts`
 Expected: PASS
@@ -1033,7 +1033,7 @@ Expected: PASS
 Run: `pnpm --filter @pokecheetos/client typecheck`
 Expected: PASS
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add apps/client
@@ -1056,7 +1056,7 @@ git commit -m "feat: add client bootstrap and room connection management"
 - Test: `apps/client/src/world/world-store.test.ts`
 - Test: `apps/client/src/world/entity-presenter.test.ts`
 
-- [ ] **Step 1: Write the failing world state tests**
+- [x] **Step 1: Write the failing world state tests**
 
 Create `apps/client/src/world/world-store.test.ts` with cases for:
 
@@ -1069,18 +1069,18 @@ Create `apps/client/src/world/entity-presenter.test.ts` with cases for:
 - local authoritative tile maps to exact pixels
 - remote players receive interpolation targets between authoritative tiles
 
-- [ ] **Step 2: Run tests to verify they fail**
+- [x] **Step 2: Run tests to verify they fail**
 
 Run: `pnpm --filter @pokecheetos/client test -- apps/client/src/world/world-store.test.ts apps/client/src/world/entity-presenter.test.ts`
 Expected: FAIL because the store and presenter do not exist yet
 
-- [ ] **Step 3: Implement store and presenter**
+- [x] **Step 3: Implement store and presenter**
 
 Create `world-store.ts` to consume room state and room point events.
 
 Create `entity-presenter.ts` to convert authoritative tile positions into render coordinates and remote tween targets.
 
-- [ ] **Step 4: Implement Phaser scenes, input, and dialogue flow**
+- [x] **Step 4: Implement Phaser scenes, input, and dialogue flow**
 
 Create:
 
@@ -1101,7 +1101,7 @@ Rules to enforce:
 - `Space` sends `npc_interact` for the facing NPC
 - `dialog-overlay.ts` renders returned dialogue lines from `npc_dialogue`
 
-- [ ] **Step 5: Verify client behavior**
+- [x] **Step 5: Verify client behavior**
 
 Run: `pnpm --filter @pokecheetos/client test -- apps/client/src/world/world-store.test.ts apps/client/src/world/entity-presenter.test.ts`
 Expected: PASS
@@ -1109,7 +1109,7 @@ Expected: PASS
 Run: `pnpm --filter @pokecheetos/client build`
 Expected: PASS
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add apps/client/src
@@ -1130,7 +1130,7 @@ git commit -m "feat: render authoritative world and npc dialogue in phaser"
 - Delete: `client/**`
 - Delete: `server/**`
 
-- [ ] **Step 1: Write the failing testing-package smoke test**
+- [x] **Step 1: Write the failing testing-package smoke test**
 
 Create `packages/testing/src/smoke/workspace-smoke.test.ts` that imports and exercises:
 
@@ -1143,11 +1143,11 @@ Create `packages/testing/src/smoke/workspace-smoke.test.ts` that imports and exe
 Run: `pnpm exec vitest run packages/testing/src/smoke/workspace-smoke.test.ts`
 Expected: FAIL because the package does not exist yet
 
-- [ ] **Step 2: Implement the testing package**
+- [x] **Step 2: Implement the testing package**
 
 Create `packages/testing/package.json`, `tsconfig.json`, `src/index.ts`, `src/maps/fixtures.ts`, `src/server/create-test-room.ts`, and `src/session/fixtures.ts`.
 
-- [ ] **Step 3: Update the root README**
+- [x] **Step 3: Update the root README**
 
 Rewrite `README.md` to cover:
 
@@ -1158,11 +1158,11 @@ Rewrite `README.md` to cover:
 - tests and load test commands
 - current v1 scope and out-of-scope items
 
-- [ ] **Step 4: Remove the legacy prototype directories**
+- [x] **Step 4: Remove the legacy prototype directories**
 
 Delete `client/` and `server/` only after the replacement apps and docs are green.
 
-- [ ] **Step 5: Run final verification**
+- [x] **Step 5: Run final verification**
 
 Run: `pnpm lint`
 Expected: PASS
@@ -1179,7 +1179,7 @@ Expected: PASS
 Run: `pnpm --filter @pokecheetos/server exec tsx src/loadtest/world-room.loadtest.ts --clients 50 --duration-ms 120000 --map-id town`
 Expected: PASS
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add README.md packages/testing apps packages client server
@@ -1206,3 +1206,98 @@ Before execution, verify:
 - If implementation pressure pushes runtime constants, room lifecycle, or guest bootstrap logic into the wrong package, stop and correct the boundary before proceeding.
 
 Plan complete and saved to `docs/superpowers/plans/2026-03-13-pokecheetos-foundation-implementation.md`. Ready to execute?
+
+## Autopilot Run Log
+
+- [x] 2026-03-13 05:27 BRT — baseline verification block
+  - `pnpm typecheck` ✅
+  - `pnpm test` ✅
+  - `pnpm --filter @pokecheetos/client build` ✅
+  - Notes: no blocking issue found in this verification pass.
+- [x] 2026-03-13 05:27 BRT — task 8 closure verification block
+  - `pnpm --filter @pokecheetos/server test -- apps/server/src/services/npc-interaction-service.test.ts` ✅
+  - `pnpm --filter @pokecheetos/server exec tsx src/loadtest/world-room.loadtest.ts --clients 5 --duration-ms 5000 --map-id town` ✅
+  - Notes: task 8 checklist reconciled with implemented commits; no blocking issue found.
+- [x] 2026-03-13 06:08 BRT — task 7 movement input groundwork block
+  - Implemented `move_intent` handling in `WorldRoom` with held direction + one-step buffered direction state.
+  - Added focused tests in `apps/server/src/colyseus/rooms/world-room.test.ts` for pressed/released input and buffered-direction consume flow.
+  - `pnpm --filter @pokecheetos/server test -- apps/server/src/colyseus/rooms/world-room.test.ts` ✅
+  - `pnpm --filter @pokecheetos/server typecheck` ✅
+  - Notes: groundwork complete; full room simulation tick/reconnect/visibility assertions still pending for full Task 7 closure.
+- [x] 2026-03-13 06:29 BRT — task 7 simulation application block
+  - Added `WorldRoom.simulateStepForClient()` to apply authoritative simulation output into room state, consume one-step buffered input, and emit typed `map_transition` events.
+  - Wired room simulation interval to execute per connected client at room patch rate.
+  - Added focused test covering simulation call payload, buffered-direction consumption, state mutation, and transition event emission.
+  - `pnpm --filter @pokecheetos/server test -- apps/server/src/colyseus/rooms/world-room.test.ts` ✅
+  - `pnpm --filter @pokecheetos/server typecheck` ✅
+  - Notes: reconnect reservation and visibility enter/leave coverage still pending for complete Task 7 closure.
+- [x] 2026-03-13 06:50 BRT — task 7 visibility diff coverage block
+  - Added `WorldRoom.computeVisibilityDiff()` backed by `runtimeConfig.visibilityWindow` + `isTileVisible` to track enter/leave deltas for same-map players.
+  - Wired simulation loop to refresh per-client visibility snapshots and added room leave cleanup for movement/visibility state.
+  - Added focused `world-room.test.ts` coverage for visibility enter/leave behavior (same-map only, configured rectangle bounds).
+  - `pnpm --filter @pokecheetos/server test -- apps/server/src/colyseus/rooms/world-room.test.ts` ✅
+  - `pnpm --filter @pokecheetos/server typecheck` ✅
+  - Notes: reconnect reservation/duplicate-guest room-level wiring remains pending for full Task 7 parity with the original checklist.
+- [x] 2026-03-13 07:10 BRT — task 7 duplicate guest ejection block
+  - Added `WorldRoom.onJoin()` bootstrap-state wiring so room joins hydrate authoritative `PlayerState` from guest bootstrap identity.
+  - Wired `presence-service` registration plus per-connection cleanup to eject the older gameplay session when the same `guestId` joins again.
+  - Added focused `world-room.test.ts` coverage proving the displaced session is removed from room state and asked to leave.
+  - `pnpm --filter @pokecheetos/server test -- apps/server/src/colyseus/rooms/world-room.test.ts` ✅
+  - `pnpm --filter @pokecheetos/server typecheck` ✅
+  - Notes: reconnect reservation reuse is still pending before full Task 7 closure.
+- [x] 2026-03-13 07:29 BRT — task 7 reconnect reservation block
+  - Added room-level reconnect reservations in `WorldRoom` with `runtimeConfig.reconnectWindowMs` TTL and automatic expiry cleanup.
+  - Updated leave/join lifecycle to reserve authoritative player snapshot on disconnect and restore snapshot when the same guest reconnects within window.
+  - Added focused `world-room.test.ts` coverage for reconnect-state restore behavior.
+  - `pnpm --filter @pokecheetos/server test -- apps/server/src/colyseus/rooms/world-room.test.ts` ✅
+  - `pnpm --filter @pokecheetos/server typecheck` ✅
+  - Notes: no blocking issue found in this block.
+- [x] 2026-03-13 07:48 BRT — task 7 persistence wiring verification block
+  - Added `WorldRoom` dependency injection for `playerRepository` so default room simulation can persist `updateLastKnownState()` and `updateLastSeenAt()` without custom simulation stubs.
+  - Added focused `world-room.test.ts` coverage proving authoritative movement triggers repository persistence updates.
+  - `pnpm --filter @pokecheetos/server test -- apps/server/src/colyseus/rooms/world-room.test.ts` ✅
+  - `pnpm --filter @pokecheetos/server typecheck` ✅
+  - Notes: no blocking issue found in this block.
+- [x] 2026-03-13 08:08 BRT — task 7 room-allocation transition fallback coverage block
+  - Added focused `room-allocation-service.test.ts` coverage for transition-time allocation behavior:
+    - prefers the first room with capacity when allocating room hints;
+    - creates a new overflow room hint when every existing room is at capacity.
+  - `pnpm --filter @pokecheetos/server test -- apps/server/src/services/room-allocation-service.test.ts` ✅
+  - `pnpm --filter @pokecheetos/server typecheck` ✅
+  - Notes: no blocking issue found in this block.
+- [x] 2026-03-13 08:29 BRT — task 9 client test-runner alignment block
+  - Migrated Task 9 bootstrap/connection/create-game tests from `node:test` imports to `vitest` imports so they are discovered by the configured client test runner.
+  - `pnpm exec vitest run apps/client/src/session/session-client.test.ts apps/client/src/network/room-connection-manager.test.ts apps/client/src/bootstrap/create-game.test.ts` ✅
+  - `pnpm --filter @pokecheetos/client typecheck` ✅
+  - Notes: no blocking issue found in this block.
+- [x] 2026-03-13 08:48 BRT — client vitest script + world suite normalization block
+  - Switched `apps/client/package.json` test script from Node's native runner to `vitest run` and added explicit client devDependencies (`vitest`, `jsdom`, `typescript`).
+  - Migrated world suite files (`world-store.test.ts`, `entity-presenter.test.ts`) from `node:test` + `assert` to `vitest` + `expect` for a single consistent runner.
+  - `pnpm --filter @pokecheetos/client test` ✅
+  - `pnpm --filter @pokecheetos/client typecheck` ✅
+  - Notes: no blocking issue found in this block.
+- [x] 2026-03-13 09:08 BRT — task 10 checklist reconciliation + verification block
+  - Reconciled Task 10 checklist items in the implementation plan with already-landed client world/scenes/input/dialogue commits.
+  - `pnpm --filter @pokecheetos/client test -- apps/client/src/world/world-store.test.ts apps/client/src/world/entity-presenter.test.ts` ✅
+  - `pnpm --filter @pokecheetos/client typecheck` ✅
+  - `pnpm --filter @pokecheetos/client build` ✅ (non-blocking Vite chunk-size warning only)
+  - Notes: no blocking issue found in this block.
+- [x] 2026-03-13 09:29 BRT — task 11 final verification + legacy-readme alignment block
+  - Reconciled Task 11 Step 4/5 checklist state after confirming legacy `client/` and `server/` folders are absent.
+  - Updated `README.md` Legacy Prototype section to reflect completed migration.
+  - `pnpm lint` ✅
+  - `pnpm typecheck` ✅
+  - `pnpm test` ✅
+  - `pnpm --filter @pokecheetos/client build` ✅ (non-blocking Vite chunk-size warning only)
+  - `pnpm --filter @pokecheetos/server exec tsx src/loadtest/world-room.loadtest.ts --clients 50 --duration-ms 120000 --map-id town` ✅
+  - Notes: no blocking issue found in this block.
+- [x] 2026-03-13 09:47 BRT — task 11 testing-package checklist reconciliation block
+  - Reconciled Task 11 Step 1/2/3/6 checklist state with already-landed testing package + README updates.
+  - `pnpm exec vitest run packages/testing/src/smoke/workspace-smoke.test.ts` ✅
+  - `pnpm --filter @pokecheetos/testing typecheck` ✅
+  - Notes: no blocking issue found in this block.
+- [x] 2026-03-13 10:27 BRT — task 9 checklist reconciliation + verification block
+  - Reconciled Task 9 Step 1/2/3/4/5/6 checklist state with already-landed client bootstrap/session/connection commits.
+  - `pnpm --filter @pokecheetos/client test -- apps/client/src/session/session-client.test.ts apps/client/src/network/room-connection-manager.test.ts apps/client/src/bootstrap/create-game.test.ts` ✅
+  - `pnpm --filter @pokecheetos/client typecheck` ✅
+  - Notes: no blocking issue found in this block.

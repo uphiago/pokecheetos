@@ -1,30 +1,92 @@
-# Simple realtime platform game build with Phaser.io
-**Simple realtime Pokemon game build with Phaser 3, Colyseus.io & Webpack 4.**
+# PokeCheetos
 
-![PokeMMO](https://github.com/aaron5670/PokeMMO-Online-Realtime-Multiplayer-Game/blob/master/docs/images/PokeMMO.gif?raw=true)
+Monorepo foundation for an authoritative multiplayer top-down game inspired by Pokémon-style exploration.
 
-### Features & ToDo
-- [x] Multiple players can join the game
-- [x] Maps are can be created/edited with [Tiled Map Editor](https://www.mapeditor.org/)
-- [x] Multiple levels/maps
-- [ ] Pokémons added
-- [ ] Can going inside building (In progress)
+This repository is rebuilding the legacy prototype into a clean workspace with strict package boundaries:
 
-### How to install
+- **Authoritative server simulation** (Fastify + Colyseus)
+- **Phaser client** rendering server-authoritative state
+- **Tiled-backed maps** compiled into runtime-safe artifacts
+- **Shared contracts/config** consumed across apps and packages
+
+## Monorepo Structure
+
+- `apps/client` — Phaser client, session bootstrap, room connection, rendering/UI
+- `apps/server` — Fastify bootstrap API, Colyseus rooms, persistence, load test
+- `packages/config` — runtime constants + shared TS/ESLint/Prettier presets
+- `packages/shared` — protocol contracts, grid helpers, world/visibility types
+- `packages/maps` — authored map validation + compile pipeline + runtime registry
+- `packages/testing` — cross-workspace fixtures and smoke-test helpers
+- `docs/` — plans, design notes, and implementation guidance
+
+## Setup
+
+```bash
+pnpm install
 ```
-// Clone this repository
-$ git clone https://github.com/aaron5670/PokeMMO-Online-Realtime-Multiplayer-Game.git
 
-// Go to the client folder and install all modules
-$ cd client && npm install
+## Run Apps
 
-// Go to the server folder and install all modules
-$ cd ../server && npm install
+In separate terminals:
 
-// Start the server
-$ node server.js
+```bash
+# server
+pnpm --filter @pokecheetos/server dev
 
-// Open a new terminal and navigate to the client folder and start the webpack server
-$ cd client && npm start
+# client
+pnpm --filter @pokecheetos/client dev
 ```
-After successfully install go to [http://localhost:8080](http://localhost:8080/)
+
+## Build
+
+```bash
+# full workspace build graph
+pnpm build
+
+# client-only production build
+pnpm --filter @pokecheetos/client build
+```
+
+## Validation Commands
+
+```bash
+# lint workspace
+pnpm lint
+
+# typecheck workspace
+pnpm typecheck
+
+# run all tests
+pnpm test
+
+# smoke package integration
+pnpm --filter @pokecheetos/testing test -- packages/testing/src/smoke/workspace-smoke.test.ts
+```
+
+## Load Test
+
+```bash
+pnpm --filter @pokecheetos/server exec tsx src/loadtest/world-room.loadtest.ts --clients 50 --duration-ms 120000 --map-id town
+```
+
+## Current v1 Scope
+
+- Guest bootstrap and token-based restore flow
+- Authoritative movement and room-state simulation
+- Map transitions based on compiled map metadata
+- NPC interaction with server-validated dialogue events
+- Phaser world rendering with room connection/reconnection lifecycle
+- Workspace-level package contracts and smoke coverage
+
+## Explicitly Out of Scope (for this foundation phase)
+
+- Chat systems
+- Audio pipeline
+- Mobile-specific UX
+- Inventory/economy systems
+- Combat/battles
+- React UI shell migration
+
+## Legacy Prototype
+
+The old `client/` and `server/` prototype folders were removed after migrating to `apps/client` and `apps/server`.

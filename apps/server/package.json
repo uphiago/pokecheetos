@@ -1,0 +1,25 @@
+{
+  "name": "@pokecheetos/server",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@colyseus/schema": "^3.0.0",
+    "@pokecheetos/config": "workspace:*",
+    "@pokecheetos/maps": "workspace:*",
+    "@pokecheetos/shared": "workspace:*",
+    "better-sqlite3": "^12.4.1",
+    "colyseus": "^0.16.5",
+    "drizzle-orm": "^0.44.5",
+    "fastify": "^5.6.1"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
+    "tsx": "^4.20.6"
+  }
+}
