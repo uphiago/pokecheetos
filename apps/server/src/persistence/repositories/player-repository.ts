@@ -46,12 +46,12 @@ export function buildPlayerRepository(db: Database.Database) {
         guest_token_hash: guestTokenHash,
         display_name: displayName,
         last_map_id: 'town',
-        last_tile_x: 2,
-        last_tile_y: 2,
+        last_tile_x: 11,
+        last_tile_y: 38,
         last_direction: 'down',
         spawn_map_id: 'town',
-        spawn_tile_x: 2,
-        spawn_tile_y: 2,
+        spawn_tile_x: 11,
+        spawn_tile_y: 38,
         last_seen_at: now,
         flags_json: '{}',
         preferences_json: '{}',
@@ -59,7 +59,7 @@ export function buildPlayerRepository(db: Database.Database) {
         updated_at: now
       });
 
-      return { guestId, guestToken, guestTokenHash, displayName, mapId: 'town', tileX: 2, tileY: 2, direction: 'down' as const };
+      return { guestId, guestToken, guestTokenHash, displayName, mapId: 'town', tileX: 11, tileY: 38, direction: 'down' as const };
     },
 
     findByTokenHash(tokenHash: string): PlayerRecord | null {

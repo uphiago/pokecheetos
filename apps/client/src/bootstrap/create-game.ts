@@ -13,6 +13,8 @@ import {
   reportClientDiagnostics,
   type ClientDiagnostics
 } from '../ui/client-diagnostics.ts';
+import { createBootScene } from '../scenes/boot-scene.ts';
+import { createWorldScene } from '../scenes/world-scene.ts';
 
 export type GameLike = {
   destroy(removeCanvas?: boolean): void;
@@ -26,8 +28,14 @@ export type GameConfig = {
     pixelArt: boolean;
   };
   scale: {
+    mode: number;
+    autoCenter: number;
     width: number;
     height: number;
+  };
+  physics: {
+    default: string;
+    arcade: { gravity: { y: number }; debug: boolean };
   };
   scene: unknown[];
 };
@@ -35,6 +43,7 @@ export type GameConfig = {
 export type PhaserModuleLike = {
   AUTO: number;
   Game: new (config?: unknown) => GameLike;
+  Scene?: unknown;
 };
 
 type SessionClientLike = {
@@ -84,8 +93,14 @@ function buildDefaultConfig(options: CreateGameOptions, phaserModule?: PhaserMod
       pixelArt: true
     },
     scale: {
+      mode: 3,       // Phaser.Scale.FIT — redimensiona mantendo aspect ratio
+      autoCenter: 1, // Phaser.Scale.CENTER_BOTH
       width: 960,
       height: 640
+    },
+    physics: {
+      default: 'arcade',
+      arcade: { gravity: { y: 0 }, debug: false }
     },
     scene: options.scenes ? [...options.scenes] : [...DEFAULT_SCENE_LIST]
   };
@@ -154,9 +169,26 @@ export async function createGame<TRoom extends RoomLike = RoomLike>(
   uiShellBridge.showConnected({ session, room });
 
   const config = buildDefaultConfig(options, options.phaserModule);
+
+  // Build default scene list when phaserModule provides Scene class and no scenes were specified
+  if (
+    options.phaserModule?.Scene &&
+    (!options.scenes || options.scenes.length === 0) &&
+    !options.gameFactory
+  ) {
+    const PhaserScene = options.phaserModule.Scene as typeof Phaser.Scene;
+    config.scene = [createBootScene(PhaserScene), createWorldScene(PhaserScene)];
+  }
+
   const game = options.gameFactory
     ? options.gameFactory(config)
     : createPhaserGame(config, options.phaserModule);
+
+  // Store room and session in registry so scenes can access them
+  if (!options.gameFactory) {
+    (game as unknown as { registry: { set(k: string, v: unknown): void } }).registry.set('room', room);
+    (game as unknown as { registry: { set(k: string, v: unknown): void } }).registry.set('session', session);
+  }
 
   return {
     game,

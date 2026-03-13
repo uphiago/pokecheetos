@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'vitest';
-import { createLogger } from './logger.ts';
+import { createLogger } from './logger';
 
 describe('logger', () => {
   it('writes info logs as structured JSON', () => {

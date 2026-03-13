@@ -1,25 +1,2021 @@
 {
   "mapId": "route-1",
-  "width": 30,
+  "width": 40,
   "height": 20,
   "defaultSpawnId": "route_entry",
   "blockedTiles": [
-    { "tileX": 8, "tileY": 8 }
+    {
+      "tileX": 0,
+      "tileY": 0
+    },
+    {
+      "tileX": 1,
+      "tileY": 0
+    },
+    {
+      "tileX": 2,
+      "tileY": 0
+    },
+    {
+      "tileX": 3,
+      "tileY": 0
+    },
+    {
+      "tileX": 4,
+      "tileY": 0
+    },
+    {
+      "tileX": 5,
+      "tileY": 0
+    },
+    {
+      "tileX": 6,
+      "tileY": 0
+    },
+    {
+      "tileX": 7,
+      "tileY": 0
+    },
+    {
+      "tileX": 8,
+      "tileY": 0
+    },
+    {
+      "tileX": 9,
+      "tileY": 0
+    },
+    {
+      "tileX": 28,
+      "tileY": 0
+    },
+    {
+      "tileX": 29,
+      "tileY": 0
+    },
+    {
+      "tileX": 30,
+      "tileY": 0
+    },
+    {
+      "tileX": 31,
+      "tileY": 0
+    },
+    {
+      "tileX": 32,
+      "tileY": 0
+    },
+    {
+      "tileX": 33,
+      "tileY": 0
+    },
+    {
+      "tileX": 34,
+      "tileY": 0
+    },
+    {
+      "tileX": 35,
+      "tileY": 0
+    },
+    {
+      "tileX": 36,
+      "tileY": 0
+    },
+    {
+      "tileX": 37,
+      "tileY": 0
+    },
+    {
+      "tileX": 38,
+      "tileY": 0
+    },
+    {
+      "tileX": 39,
+      "tileY": 0
+    },
+    {
+      "tileX": 0,
+      "tileY": 1
+    },
+    {
+      "tileX": 1,
+      "tileY": 1
+    },
+    {
+      "tileX": 2,
+      "tileY": 1
+    },
+    {
+      "tileX": 3,
+      "tileY": 1
+    },
+    {
+      "tileX": 4,
+      "tileY": 1
+    },
+    {
+      "tileX": 5,
+      "tileY": 1
+    },
+    {
+      "tileX": 6,
+      "tileY": 1
+    },
+    {
+      "tileX": 7,
+      "tileY": 1
+    },
+    {
+      "tileX": 8,
+      "tileY": 1
+    },
+    {
+      "tileX": 9,
+      "tileY": 1
+    },
+    {
+      "tileX": 28,
+      "tileY": 1
+    },
+    {
+      "tileX": 29,
+      "tileY": 1
+    },
+    {
+      "tileX": 30,
+      "tileY": 1
+    },
+    {
+      "tileX": 31,
+      "tileY": 1
+    },
+    {
+      "tileX": 32,
+      "tileY": 1
+    },
+    {
+      "tileX": 33,
+      "tileY": 1
+    },
+    {
+      "tileX": 34,
+      "tileY": 1
+    },
+    {
+      "tileX": 35,
+      "tileY": 1
+    },
+    {
+      "tileX": 36,
+      "tileY": 1
+    },
+    {
+      "tileX": 37,
+      "tileY": 1
+    },
+    {
+      "tileX": 38,
+      "tileY": 1
+    },
+    {
+      "tileX": 39,
+      "tileY": 1
+    },
+    {
+      "tileX": 0,
+      "tileY": 2
+    },
+    {
+      "tileX": 1,
+      "tileY": 2
+    },
+    {
+      "tileX": 2,
+      "tileY": 2
+    },
+    {
+      "tileX": 3,
+      "tileY": 2
+    },
+    {
+      "tileX": 4,
+      "tileY": 2
+    },
+    {
+      "tileX": 5,
+      "tileY": 2
+    },
+    {
+      "tileX": 6,
+      "tileY": 2
+    },
+    {
+      "tileX": 7,
+      "tileY": 2
+    },
+    {
+      "tileX": 8,
+      "tileY": 2
+    },
+    {
+      "tileX": 9,
+      "tileY": 2
+    },
+    {
+      "tileX": 28,
+      "tileY": 2
+    },
+    {
+      "tileX": 29,
+      "tileY": 2
+    },
+    {
+      "tileX": 30,
+      "tileY": 2
+    },
+    {
+      "tileX": 31,
+      "tileY": 2
+    },
+    {
+      "tileX": 32,
+      "tileY": 2
+    },
+    {
+      "tileX": 33,
+      "tileY": 2
+    },
+    {
+      "tileX": 34,
+      "tileY": 2
+    },
+    {
+      "tileX": 35,
+      "tileY": 2
+    },
+    {
+      "tileX": 36,
+      "tileY": 2
+    },
+    {
+      "tileX": 37,
+      "tileY": 2
+    },
+    {
+      "tileX": 38,
+      "tileY": 2
+    },
+    {
+      "tileX": 39,
+      "tileY": 2
+    },
+    {
+      "tileX": 0,
+      "tileY": 3
+    },
+    {
+      "tileX": 1,
+      "tileY": 3
+    },
+    {
+      "tileX": 2,
+      "tileY": 3
+    },
+    {
+      "tileX": 3,
+      "tileY": 3
+    },
+    {
+      "tileX": 4,
+      "tileY": 3
+    },
+    {
+      "tileX": 5,
+      "tileY": 3
+    },
+    {
+      "tileX": 6,
+      "tileY": 3
+    },
+    {
+      "tileX": 7,
+      "tileY": 3
+    },
+    {
+      "tileX": 8,
+      "tileY": 3
+    },
+    {
+      "tileX": 9,
+      "tileY": 3
+    },
+    {
+      "tileX": 28,
+      "tileY": 3
+    },
+    {
+      "tileX": 29,
+      "tileY": 3
+    },
+    {
+      "tileX": 30,
+      "tileY": 3
+    },
+    {
+      "tileX": 31,
+      "tileY": 3
+    },
+    {
+      "tileX": 32,
+      "tileY": 3
+    },
+    {
+      "tileX": 33,
+      "tileY": 3
+    },
+    {
+      "tileX": 34,
+      "tileY": 3
+    },
+    {
+      "tileX": 35,
+      "tileY": 3
+    },
+    {
+      "tileX": 36,
+      "tileY": 3
+    },
+    {
+      "tileX": 37,
+      "tileY": 3
+    },
+    {
+      "tileX": 38,
+      "tileY": 3
+    },
+    {
+      "tileX": 39,
+      "tileY": 3
+    },
+    {
+      "tileX": 0,
+      "tileY": 4
+    },
+    {
+      "tileX": 1,
+      "tileY": 4
+    },
+    {
+      "tileX": 2,
+      "tileY": 4
+    },
+    {
+      "tileX": 3,
+      "tileY": 4
+    },
+    {
+      "tileX": 4,
+      "tileY": 4
+    },
+    {
+      "tileX": 5,
+      "tileY": 4
+    },
+    {
+      "tileX": 6,
+      "tileY": 4
+    },
+    {
+      "tileX": 7,
+      "tileY": 4
+    },
+    {
+      "tileX": 8,
+      "tileY": 4
+    },
+    {
+      "tileX": 9,
+      "tileY": 4
+    },
+    {
+      "tileX": 28,
+      "tileY": 4
+    },
+    {
+      "tileX": 29,
+      "tileY": 4
+    },
+    {
+      "tileX": 30,
+      "tileY": 4
+    },
+    {
+      "tileX": 31,
+      "tileY": 4
+    },
+    {
+      "tileX": 32,
+      "tileY": 4
+    },
+    {
+      "tileX": 33,
+      "tileY": 4
+    },
+    {
+      "tileX": 34,
+      "tileY": 4
+    },
+    {
+      "tileX": 35,
+      "tileY": 4
+    },
+    {
+      "tileX": 36,
+      "tileY": 4
+    },
+    {
+      "tileX": 37,
+      "tileY": 4
+    },
+    {
+      "tileX": 38,
+      "tileY": 4
+    },
+    {
+      "tileX": 39,
+      "tileY": 4
+    },
+    {
+      "tileX": 0,
+      "tileY": 5
+    },
+    {
+      "tileX": 1,
+      "tileY": 5
+    },
+    {
+      "tileX": 2,
+      "tileY": 5
+    },
+    {
+      "tileX": 3,
+      "tileY": 5
+    },
+    {
+      "tileX": 4,
+      "tileY": 5
+    },
+    {
+      "tileX": 5,
+      "tileY": 5
+    },
+    {
+      "tileX": 6,
+      "tileY": 5
+    },
+    {
+      "tileX": 7,
+      "tileY": 5
+    },
+    {
+      "tileX": 8,
+      "tileY": 5
+    },
+    {
+      "tileX": 9,
+      "tileY": 5
+    },
+    {
+      "tileX": 28,
+      "tileY": 5
+    },
+    {
+      "tileX": 29,
+      "tileY": 5
+    },
+    {
+      "tileX": 30,
+      "tileY": 5
+    },
+    {
+      "tileX": 31,
+      "tileY": 5
+    },
+    {
+      "tileX": 32,
+      "tileY": 5
+    },
+    {
+      "tileX": 33,
+      "tileY": 5
+    },
+    {
+      "tileX": 34,
+      "tileY": 5
+    },
+    {
+      "tileX": 35,
+      "tileY": 5
+    },
+    {
+      "tileX": 36,
+      "tileY": 5
+    },
+    {
+      "tileX": 37,
+      "tileY": 5
+    },
+    {
+      "tileX": 38,
+      "tileY": 5
+    },
+    {
+      "tileX": 39,
+      "tileY": 5
+    },
+    {
+      "tileX": 0,
+      "tileY": 6
+    },
+    {
+      "tileX": 1,
+      "tileY": 6
+    },
+    {
+      "tileX": 2,
+      "tileY": 6
+    },
+    {
+      "tileX": 3,
+      "tileY": 6
+    },
+    {
+      "tileX": 4,
+      "tileY": 6
+    },
+    {
+      "tileX": 5,
+      "tileY": 6
+    },
+    {
+      "tileX": 6,
+      "tileY": 6
+    },
+    {
+      "tileX": 7,
+      "tileY": 6
+    },
+    {
+      "tileX": 8,
+      "tileY": 6
+    },
+    {
+      "tileX": 9,
+      "tileY": 6
+    },
+    {
+      "tileX": 28,
+      "tileY": 6
+    },
+    {
+      "tileX": 29,
+      "tileY": 6
+    },
+    {
+      "tileX": 30,
+      "tileY": 6
+    },
+    {
+      "tileX": 31,
+      "tileY": 6
+    },
+    {
+      "tileX": 32,
+      "tileY": 6
+    },
+    {
+      "tileX": 33,
+      "tileY": 6
+    },
+    {
+      "tileX": 34,
+      "tileY": 6
+    },
+    {
+      "tileX": 35,
+      "tileY": 6
+    },
+    {
+      "tileX": 36,
+      "tileY": 6
+    },
+    {
+      "tileX": 37,
+      "tileY": 6
+    },
+    {
+      "tileX": 38,
+      "tileY": 6
+    },
+    {
+      "tileX": 39,
+      "tileY": 6
+    },
+    {
+      "tileX": 0,
+      "tileY": 7
+    },
+    {
+      "tileX": 1,
+      "tileY": 7
+    },
+    {
+      "tileX": 2,
+      "tileY": 7
+    },
+    {
+      "tileX": 3,
+      "tileY": 7
+    },
+    {
+      "tileX": 4,
+      "tileY": 7
+    },
+    {
+      "tileX": 5,
+      "tileY": 7
+    },
+    {
+      "tileX": 6,
+      "tileY": 7
+    },
+    {
+      "tileX": 7,
+      "tileY": 7
+    },
+    {
+      "tileX": 8,
+      "tileY": 7
+    },
+    {
+      "tileX": 9,
+      "tileY": 7
+    },
+    {
+      "tileX": 28,
+      "tileY": 7
+    },
+    {
+      "tileX": 29,
+      "tileY": 7
+    },
+    {
+      "tileX": 30,
+      "tileY": 7
+    },
+    {
+      "tileX": 31,
+      "tileY": 7
+    },
+    {
+      "tileX": 32,
+      "tileY": 7
+    },
+    {
+      "tileX": 33,
+      "tileY": 7
+    },
+    {
+      "tileX": 34,
+      "tileY": 7
+    },
+    {
+      "tileX": 35,
+      "tileY": 7
+    },
+    {
+      "tileX": 36,
+      "tileY": 7
+    },
+    {
+      "tileX": 37,
+      "tileY": 7
+    },
+    {
+      "tileX": 38,
+      "tileY": 7
+    },
+    {
+      "tileX": 39,
+      "tileY": 7
+    },
+    {
+      "tileX": 0,
+      "tileY": 8
+    },
+    {
+      "tileX": 1,
+      "tileY": 8
+    },
+    {
+      "tileX": 2,
+      "tileY": 8
+    },
+    {
+      "tileX": 3,
+      "tileY": 8
+    },
+    {
+      "tileX": 4,
+      "tileY": 8
+    },
+    {
+      "tileX": 5,
+      "tileY": 8
+    },
+    {
+      "tileX": 6,
+      "tileY": 8
+    },
+    {
+      "tileX": 7,
+      "tileY": 8
+    },
+    {
+      "tileX": 8,
+      "tileY": 8
+    },
+    {
+      "tileX": 9,
+      "tileY": 8
+    },
+    {
+      "tileX": 28,
+      "tileY": 8
+    },
+    {
+      "tileX": 29,
+      "tileY": 8
+    },
+    {
+      "tileX": 30,
+      "tileY": 8
+    },
+    {
+      "tileX": 31,
+      "tileY": 8
+    },
+    {
+      "tileX": 32,
+      "tileY": 8
+    },
+    {
+      "tileX": 33,
+      "tileY": 8
+    },
+    {
+      "tileX": 34,
+      "tileY": 8
+    },
+    {
+      "tileX": 35,
+      "tileY": 8
+    },
+    {
+      "tileX": 36,
+      "tileY": 8
+    },
+    {
+      "tileX": 37,
+      "tileY": 8
+    },
+    {
+      "tileX": 38,
+      "tileY": 8
+    },
+    {
+      "tileX": 39,
+      "tileY": 8
+    },
+    {
+      "tileX": 0,
+      "tileY": 9
+    },
+    {
+      "tileX": 1,
+      "tileY": 9
+    },
+    {
+      "tileX": 2,
+      "tileY": 9
+    },
+    {
+      "tileX": 3,
+      "tileY": 9
+    },
+    {
+      "tileX": 4,
+      "tileY": 9
+    },
+    {
+      "tileX": 5,
+      "tileY": 9
+    },
+    {
+      "tileX": 6,
+      "tileY": 9
+    },
+    {
+      "tileX": 7,
+      "tileY": 9
+    },
+    {
+      "tileX": 8,
+      "tileY": 9
+    },
+    {
+      "tileX": 9,
+      "tileY": 9
+    },
+    {
+      "tileX": 28,
+      "tileY": 9
+    },
+    {
+      "tileX": 29,
+      "tileY": 9
+    },
+    {
+      "tileX": 30,
+      "tileY": 9
+    },
+    {
+      "tileX": 31,
+      "tileY": 9
+    },
+    {
+      "tileX": 32,
+      "tileY": 9
+    },
+    {
+      "tileX": 33,
+      "tileY": 9
+    },
+    {
+      "tileX": 34,
+      "tileY": 9
+    },
+    {
+      "tileX": 35,
+      "tileY": 9
+    },
+    {
+      "tileX": 36,
+      "tileY": 9
+    },
+    {
+      "tileX": 37,
+      "tileY": 9
+    },
+    {
+      "tileX": 38,
+      "tileY": 9
+    },
+    {
+      "tileX": 39,
+      "tileY": 9
+    },
+    {
+      "tileX": 0,
+      "tileY": 10
+    },
+    {
+      "tileX": 1,
+      "tileY": 10
+    },
+    {
+      "tileX": 2,
+      "tileY": 10
+    },
+    {
+      "tileX": 3,
+      "tileY": 10
+    },
+    {
+      "tileX": 4,
+      "tileY": 10
+    },
+    {
+      "tileX": 5,
+      "tileY": 10
+    },
+    {
+      "tileX": 6,
+      "tileY": 10
+    },
+    {
+      "tileX": 7,
+      "tileY": 10
+    },
+    {
+      "tileX": 8,
+      "tileY": 10
+    },
+    {
+      "tileX": 9,
+      "tileY": 10
+    },
+    {
+      "tileX": 10,
+      "tileY": 10
+    },
+    {
+      "tileX": 11,
+      "tileY": 10
+    },
+    {
+      "tileX": 12,
+      "tileY": 10
+    },
+    {
+      "tileX": 13,
+      "tileY": 10
+    },
+    {
+      "tileX": 14,
+      "tileY": 10
+    },
+    {
+      "tileX": 15,
+      "tileY": 10
+    },
+    {
+      "tileX": 16,
+      "tileY": 10
+    },
+    {
+      "tileX": 19,
+      "tileY": 10
+    },
+    {
+      "tileX": 20,
+      "tileY": 10
+    },
+    {
+      "tileX": 21,
+      "tileY": 10
+    },
+    {
+      "tileX": 22,
+      "tileY": 10
+    },
+    {
+      "tileX": 23,
+      "tileY": 10
+    },
+    {
+      "tileX": 24,
+      "tileY": 10
+    },
+    {
+      "tileX": 25,
+      "tileY": 10
+    },
+    {
+      "tileX": 26,
+      "tileY": 10
+    },
+    {
+      "tileX": 27,
+      "tileY": 10
+    },
+    {
+      "tileX": 28,
+      "tileY": 10
+    },
+    {
+      "tileX": 29,
+      "tileY": 10
+    },
+    {
+      "tileX": 30,
+      "tileY": 10
+    },
+    {
+      "tileX": 31,
+      "tileY": 10
+    },
+    {
+      "tileX": 32,
+      "tileY": 10
+    },
+    {
+      "tileX": 33,
+      "tileY": 10
+    },
+    {
+      "tileX": 34,
+      "tileY": 10
+    },
+    {
+      "tileX": 35,
+      "tileY": 10
+    },
+    {
+      "tileX": 36,
+      "tileY": 10
+    },
+    {
+      "tileX": 37,
+      "tileY": 10
+    },
+    {
+      "tileX": 38,
+      "tileY": 10
+    },
+    {
+      "tileX": 39,
+      "tileY": 10
+    },
+    {
+      "tileX": 0,
+      "tileY": 11
+    },
+    {
+      "tileX": 1,
+      "tileY": 11
+    },
+    {
+      "tileX": 2,
+      "tileY": 11
+    },
+    {
+      "tileX": 3,
+      "tileY": 11
+    },
+    {
+      "tileX": 4,
+      "tileY": 11
+    },
+    {
+      "tileX": 5,
+      "tileY": 11
+    },
+    {
+      "tileX": 6,
+      "tileY": 11
+    },
+    {
+      "tileX": 7,
+      "tileY": 11
+    },
+    {
+      "tileX": 8,
+      "tileY": 11
+    },
+    {
+      "tileX": 9,
+      "tileY": 11
+    },
+    {
+      "tileX": 28,
+      "tileY": 11
+    },
+    {
+      "tileX": 29,
+      "tileY": 11
+    },
+    {
+      "tileX": 30,
+      "tileY": 11
+    },
+    {
+      "tileX": 31,
+      "tileY": 11
+    },
+    {
+      "tileX": 32,
+      "tileY": 11
+    },
+    {
+      "tileX": 33,
+      "tileY": 11
+    },
+    {
+      "tileX": 34,
+      "tileY": 11
+    },
+    {
+      "tileX": 35,
+      "tileY": 11
+    },
+    {
+      "tileX": 36,
+      "tileY": 11
+    },
+    {
+      "tileX": 37,
+      "tileY": 11
+    },
+    {
+      "tileX": 38,
+      "tileY": 11
+    },
+    {
+      "tileX": 39,
+      "tileY": 11
+    },
+    {
+      "tileX": 0,
+      "tileY": 12
+    },
+    {
+      "tileX": 1,
+      "tileY": 12
+    },
+    {
+      "tileX": 2,
+      "tileY": 12
+    },
+    {
+      "tileX": 3,
+      "tileY": 12
+    },
+    {
+      "tileX": 4,
+      "tileY": 12
+    },
+    {
+      "tileX": 5,
+      "tileY": 12
+    },
+    {
+      "tileX": 6,
+      "tileY": 12
+    },
+    {
+      "tileX": 7,
+      "tileY": 12
+    },
+    {
+      "tileX": 8,
+      "tileY": 12
+    },
+    {
+      "tileX": 9,
+      "tileY": 12
+    },
+    {
+      "tileX": 28,
+      "tileY": 12
+    },
+    {
+      "tileX": 29,
+      "tileY": 12
+    },
+    {
+      "tileX": 30,
+      "tileY": 12
+    },
+    {
+      "tileX": 31,
+      "tileY": 12
+    },
+    {
+      "tileX": 32,
+      "tileY": 12
+    },
+    {
+      "tileX": 33,
+      "tileY": 12
+    },
+    {
+      "tileX": 34,
+      "tileY": 12
+    },
+    {
+      "tileX": 35,
+      "tileY": 12
+    },
+    {
+      "tileX": 36,
+      "tileY": 12
+    },
+    {
+      "tileX": 37,
+      "tileY": 12
+    },
+    {
+      "tileX": 38,
+      "tileY": 12
+    },
+    {
+      "tileX": 39,
+      "tileY": 12
+    },
+    {
+      "tileX": 0,
+      "tileY": 13
+    },
+    {
+      "tileX": 1,
+      "tileY": 13
+    },
+    {
+      "tileX": 2,
+      "tileY": 13
+    },
+    {
+      "tileX": 3,
+      "tileY": 13
+    },
+    {
+      "tileX": 4,
+      "tileY": 13
+    },
+    {
+      "tileX": 5,
+      "tileY": 13
+    },
+    {
+      "tileX": 6,
+      "tileY": 13
+    },
+    {
+      "tileX": 7,
+      "tileY": 13
+    },
+    {
+      "tileX": 8,
+      "tileY": 13
+    },
+    {
+      "tileX": 9,
+      "tileY": 13
+    },
+    {
+      "tileX": 28,
+      "tileY": 13
+    },
+    {
+      "tileX": 29,
+      "tileY": 13
+    },
+    {
+      "tileX": 30,
+      "tileY": 13
+    },
+    {
+      "tileX": 31,
+      "tileY": 13
+    },
+    {
+      "tileX": 32,
+      "tileY": 13
+    },
+    {
+      "tileX": 33,
+      "tileY": 13
+    },
+    {
+      "tileX": 34,
+      "tileY": 13
+    },
+    {
+      "tileX": 35,
+      "tileY": 13
+    },
+    {
+      "tileX": 36,
+      "tileY": 13
+    },
+    {
+      "tileX": 37,
+      "tileY": 13
+    },
+    {
+      "tileX": 38,
+      "tileY": 13
+    },
+    {
+      "tileX": 39,
+      "tileY": 13
+    },
+    {
+      "tileX": 0,
+      "tileY": 14
+    },
+    {
+      "tileX": 1,
+      "tileY": 14
+    },
+    {
+      "tileX": 2,
+      "tileY": 14
+    },
+    {
+      "tileX": 3,
+      "tileY": 14
+    },
+    {
+      "tileX": 4,
+      "tileY": 14
+    },
+    {
+      "tileX": 5,
+      "tileY": 14
+    },
+    {
+      "tileX": 6,
+      "tileY": 14
+    },
+    {
+      "tileX": 7,
+      "tileY": 14
+    },
+    {
+      "tileX": 8,
+      "tileY": 14
+    },
+    {
+      "tileX": 9,
+      "tileY": 14
+    },
+    {
+      "tileX": 28,
+      "tileY": 14
+    },
+    {
+      "tileX": 29,
+      "tileY": 14
+    },
+    {
+      "tileX": 30,
+      "tileY": 14
+    },
+    {
+      "tileX": 31,
+      "tileY": 14
+    },
+    {
+      "tileX": 32,
+      "tileY": 14
+    },
+    {
+      "tileX": 33,
+      "tileY": 14
+    },
+    {
+      "tileX": 34,
+      "tileY": 14
+    },
+    {
+      "tileX": 35,
+      "tileY": 14
+    },
+    {
+      "tileX": 36,
+      "tileY": 14
+    },
+    {
+      "tileX": 37,
+      "tileY": 14
+    },
+    {
+      "tileX": 38,
+      "tileY": 14
+    },
+    {
+      "tileX": 39,
+      "tileY": 14
+    },
+    {
+      "tileX": 0,
+      "tileY": 15
+    },
+    {
+      "tileX": 1,
+      "tileY": 15
+    },
+    {
+      "tileX": 2,
+      "tileY": 15
+    },
+    {
+      "tileX": 3,
+      "tileY": 15
+    },
+    {
+      "tileX": 4,
+      "tileY": 15
+    },
+    {
+      "tileX": 5,
+      "tileY": 15
+    },
+    {
+      "tileX": 6,
+      "tileY": 15
+    },
+    {
+      "tileX": 7,
+      "tileY": 15
+    },
+    {
+      "tileX": 8,
+      "tileY": 15
+    },
+    {
+      "tileX": 9,
+      "tileY": 15
+    },
+    {
+      "tileX": 28,
+      "tileY": 15
+    },
+    {
+      "tileX": 29,
+      "tileY": 15
+    },
+    {
+      "tileX": 30,
+      "tileY": 15
+    },
+    {
+      "tileX": 31,
+      "tileY": 15
+    },
+    {
+      "tileX": 32,
+      "tileY": 15
+    },
+    {
+      "tileX": 33,
+      "tileY": 15
+    },
+    {
+      "tileX": 34,
+      "tileY": 15
+    },
+    {
+      "tileX": 35,
+      "tileY": 15
+    },
+    {
+      "tileX": 36,
+      "tileY": 15
+    },
+    {
+      "tileX": 37,
+      "tileY": 15
+    },
+    {
+      "tileX": 38,
+      "tileY": 15
+    },
+    {
+      "tileX": 39,
+      "tileY": 15
+    },
+    {
+      "tileX": 0,
+      "tileY": 16
+    },
+    {
+      "tileX": 1,
+      "tileY": 16
+    },
+    {
+      "tileX": 2,
+      "tileY": 16
+    },
+    {
+      "tileX": 3,
+      "tileY": 16
+    },
+    {
+      "tileX": 4,
+      "tileY": 16
+    },
+    {
+      "tileX": 5,
+      "tileY": 16
+    },
+    {
+      "tileX": 6,
+      "tileY": 16
+    },
+    {
+      "tileX": 7,
+      "tileY": 16
+    },
+    {
+      "tileX": 8,
+      "tileY": 16
+    },
+    {
+      "tileX": 9,
+      "tileY": 16
+    },
+    {
+      "tileX": 28,
+      "tileY": 16
+    },
+    {
+      "tileX": 29,
+      "tileY": 16
+    },
+    {
+      "tileX": 30,
+      "tileY": 16
+    },
+    {
+      "tileX": 31,
+      "tileY": 16
+    },
+    {
+      "tileX": 32,
+      "tileY": 16
+    },
+    {
+      "tileX": 33,
+      "tileY": 16
+    },
+    {
+      "tileX": 34,
+      "tileY": 16
+    },
+    {
+      "tileX": 35,
+      "tileY": 16
+    },
+    {
+      "tileX": 36,
+      "tileY": 16
+    },
+    {
+      "tileX": 37,
+      "tileY": 16
+    },
+    {
+      "tileX": 38,
+      "tileY": 16
+    },
+    {
+      "tileX": 39,
+      "tileY": 16
+    },
+    {
+      "tileX": 0,
+      "tileY": 17
+    },
+    {
+      "tileX": 1,
+      "tileY": 17
+    },
+    {
+      "tileX": 2,
+      "tileY": 17
+    },
+    {
+      "tileX": 3,
+      "tileY": 17
+    },
+    {
+      "tileX": 4,
+      "tileY": 17
+    },
+    {
+      "tileX": 5,
+      "tileY": 17
+    },
+    {
+      "tileX": 6,
+      "tileY": 17
+    },
+    {
+      "tileX": 7,
+      "tileY": 17
+    },
+    {
+      "tileX": 8,
+      "tileY": 17
+    },
+    {
+      "tileX": 9,
+      "tileY": 17
+    },
+    {
+      "tileX": 10,
+      "tileY": 17
+    },
+    {
+      "tileX": 11,
+      "tileY": 17
+    },
+    {
+      "tileX": 12,
+      "tileY": 17
+    },
+    {
+      "tileX": 13,
+      "tileY": 17
+    },
+    {
+      "tileX": 14,
+      "tileY": 17
+    },
+    {
+      "tileX": 15,
+      "tileY": 17
+    },
+    {
+      "tileX": 16,
+      "tileY": 17
+    },
+    {
+      "tileX": 17,
+      "tileY": 17
+    },
+    {
+      "tileX": 18,
+      "tileY": 17
+    },
+    {
+      "tileX": 19,
+      "tileY": 17
+    },
+    {
+      "tileX": 20,
+      "tileY": 17
+    },
+    {
+      "tileX": 21,
+      "tileY": 17
+    },
+    {
+      "tileX": 22,
+      "tileY": 17
+    },
+    {
+      "tileX": 23,
+      "tileY": 17
+    },
+    {
+      "tileX": 28,
+      "tileY": 17
+    },
+    {
+      "tileX": 29,
+      "tileY": 17
+    },
+    {
+      "tileX": 30,
+      "tileY": 17
+    },
+    {
+      "tileX": 31,
+      "tileY": 17
+    },
+    {
+      "tileX": 32,
+      "tileY": 17
+    },
+    {
+      "tileX": 33,
+      "tileY": 17
+    },
+    {
+      "tileX": 34,
+      "tileY": 17
+    },
+    {
+      "tileX": 35,
+      "tileY": 17
+    },
+    {
+      "tileX": 36,
+      "tileY": 17
+    },
+    {
+      "tileX": 37,
+      "tileY": 17
+    },
+    {
+      "tileX": 38,
+      "tileY": 17
+    },
+    {
+      "tileX": 39,
+      "tileY": 17
+    },
+    {
+      "tileX": 0,
+      "tileY": 18
+    },
+    {
+      "tileX": 1,
+      "tileY": 18
+    },
+    {
+      "tileX": 2,
+      "tileY": 18
+    },
+    {
+      "tileX": 3,
+      "tileY": 18
+    },
+    {
+      "tileX": 4,
+      "tileY": 18
+    },
+    {
+      "tileX": 5,
+      "tileY": 18
+    },
+    {
+      "tileX": 6,
+      "tileY": 18
+    },
+    {
+      "tileX": 7,
+      "tileY": 18
+    },
+    {
+      "tileX": 8,
+      "tileY": 18
+    },
+    {
+      "tileX": 9,
+      "tileY": 18
+    },
+    {
+      "tileX": 10,
+      "tileY": 18
+    },
+    {
+      "tileX": 11,
+      "tileY": 18
+    },
+    {
+      "tileX": 12,
+      "tileY": 18
+    },
+    {
+      "tileX": 13,
+      "tileY": 18
+    },
+    {
+      "tileX": 14,
+      "tileY": 18
+    },
+    {
+      "tileX": 15,
+      "tileY": 18
+    },
+    {
+      "tileX": 16,
+      "tileY": 18
+    },
+    {
+      "tileX": 17,
+      "tileY": 18
+    },
+    {
+      "tileX": 18,
+      "tileY": 18
+    },
+    {
+      "tileX": 19,
+      "tileY": 18
+    },
+    {
+      "tileX": 20,
+      "tileY": 18
+    },
+    {
+      "tileX": 21,
+      "tileY": 18
+    },
+    {
+      "tileX": 22,
+      "tileY": 18
+    },
+    {
+      "tileX": 23,
+      "tileY": 18
+    },
+    {
+      "tileX": 28,
+      "tileY": 18
+    },
+    {
+      "tileX": 29,
+      "tileY": 18
+    },
+    {
+      "tileX": 30,
+      "tileY": 18
+    },
+    {
+      "tileX": 31,
+      "tileY": 18
+    },
+    {
+      "tileX": 32,
+      "tileY": 18
+    },
+    {
+      "tileX": 33,
+      "tileY": 18
+    },
+    {
+      "tileX": 34,
+      "tileY": 18
+    },
+    {
+      "tileX": 35,
+      "tileY": 18
+    },
+    {
+      "tileX": 36,
+      "tileY": 18
+    },
+    {
+      "tileX": 37,
+      "tileY": 18
+    },
+    {
+      "tileX": 38,
+      "tileY": 18
+    },
+    {
+      "tileX": 39,
+      "tileY": 18
+    },
+    {
+      "tileX": 0,
+      "tileY": 19
+    },
+    {
+      "tileX": 1,
+      "tileY": 19
+    },
+    {
+      "tileX": 2,
+      "tileY": 19
+    },
+    {
+      "tileX": 3,
+      "tileY": 19
+    },
+    {
+      "tileX": 4,
+      "tileY": 19
+    },
+    {
+      "tileX": 5,
+      "tileY": 19
+    },
+    {
+      "tileX": 6,
+      "tileY": 19
+    },
+    {
+      "tileX": 7,
+      "tileY": 19
+    },
+    {
+      "tileX": 8,
+      "tileY": 19
+    },
+    {
+      "tileX": 9,
+      "tileY": 19
+    },
+    {
+      "tileX": 10,
+      "tileY": 19
+    },
+    {
+      "tileX": 11,
+      "tileY": 19
+    },
+    {
+      "tileX": 12,
+      "tileY": 19
+    },
+    {
+      "tileX": 13,
+      "tileY": 19
+    },
+    {
+      "tileX": 14,
+      "tileY": 19
+    },
+    {
+      "tileX": 15,
+      "tileY": 19
+    },
+    {
+      "tileX": 16,
+      "tileY": 19
+    },
+    {
+      "tileX": 17,
+      "tileY": 19
+    },
+    {
+      "tileX": 18,
+      "tileY": 19
+    },
+    {
+      "tileX": 19,
+      "tileY": 19
+    },
+    {
+      "tileX": 20,
+      "tileY": 19
+    },
+    {
+      "tileX": 21,
+      "tileY": 19
+    },
+    {
+      "tileX": 22,
+      "tileY": 19
+    },
+    {
+      "tileX": 23,
+      "tileY": 19
+    },
+    {
+      "tileX": 28,
+      "tileY": 19
+    },
+    {
+      "tileX": 29,
+      "tileY": 19
+    },
+    {
+      "tileX": 30,
+      "tileY": 19
+    },
+    {
+      "tileX": 31,
+      "tileY": 19
+    },
+    {
+      "tileX": 32,
+      "tileY": 19
+    },
+    {
+      "tileX": 33,
+      "tileY": 19
+    },
+    {
+      "tileX": 34,
+      "tileY": 19
+    },
+    {
+      "tileX": 35,
+      "tileY": 19
+    },
+    {
+      "tileX": 36,
+      "tileY": 19
+    },
+    {
+      "tileX": 37,
+      "tileY": 19
+    },
+    {
+      "tileX": 38,
+      "tileY": 19
+    },
+    {
+      "tileX": 39,
+      "tileY": 19
+    }
   ],
   "spawns": [
-    { "id": "route_entry", "tileX": 1, "tileY": 1 }
+    {
+      "id": "route_entry",
+      "tileX": 12,
+      "tileY": 1
+    },
+    {
+      "id": "to_town",
+      "tileX": 12,
+      "tileY": 19
+    }
   ],
   "transitions": [
-    { "tileX": 0, "tileY": 1, "toMapId": "town", "toSpawnId": "to_route" }
-  ],
-  "npcs": [
     {
-      "id": "npc-route-1",
-      "tileX": 3,
-      "tileY": 3,
-      "facing": "left",
-      "blocking": true,
-      "textId": "route.signpost"
+      "tileX": 12,
+      "tileY": 19,
+      "toMapId": "town",
+      "toSpawnId": "to_route"
     }
-  ]
+  ],
+  "npcs": []
 }

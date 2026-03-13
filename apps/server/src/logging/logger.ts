@@ -6,7 +6,15 @@ type LogContext = {
   guestId?: string;
   roomId?: string;
   mapId?: string;
-  phase?: 'bootstrap' | 'join' | 'simulate' | 'interact' | 'leave';
+  phase?:
+    | 'bootstrap'
+    | 'join'
+    | 'simulate'
+    | 'interact'
+    | 'leave'
+    | 'startup'
+    | 'serialize'
+    | 'lifecycle';
   errorCode?: string;
   error?: unknown;
   [key: string]: unknown;

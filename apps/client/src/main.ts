@@ -25,9 +25,9 @@ async function bootstrapClient() {
       roomEndpoint,
       phaserModule: {
         AUTO: phaserModule.AUTO,
-        Game: phaserModule.Game as unknown as new (config?: unknown) => { destroy(removeCanvas?: boolean): void }
-      },
-      scenes: []
+        Game: phaserModule.Game as unknown as new (config?: unknown) => { destroy(removeCanvas?: boolean): void },
+        Scene: phaserModule.Scene
+      }
     });
   } catch (error) {
     const mappedError = mapClientBootstrapError(error);

@@ -59,7 +59,9 @@ type RegisteredClientConnection = {
   removePlayerState: () => void;
 };
 
-type DiagnosticClient = Pick<Client, 'sessionId' | 'leave'>;
+type DiagnosticClient = Pick<Client, 'sessionId'> & {
+  leave?: (code?: number, data?: string) => void;
+};
 
 const defaultPresenceService = createPresenceService();
 const defaultClientRegistry = new Map<string, RegisteredClientConnection>();
@@ -71,6 +73,8 @@ export class WorldRoom extends Room<WorldState> {
   private readonly loadMapById: (mapId: string) => ReturnType<typeof loadCompiledMap>;
   private readonly clientRegistry: Map<string, RegisteredClientConnection>;
   private readonly movementInputs = new Map<string, MovementInputState>();
+  private readonly lastMovedAt = new Map<string, number>();
+  private static readonly MOVE_DELAY_MS = 200; // ~5 tiles/sec (Pokémon feel)
   private readonly visibilityByClient = new Map<string, Set<string>>();
   private readonly reconnectReservations = new Map<string, ReconnectReservation>();
 
@@ -229,7 +233,18 @@ export class WorldRoom extends Room<WorldState> {
       return;
     }
 
+    const now = Date.now();
+    const lastMoved = this.lastMovedAt.get(client.sessionId) ?? 0;
+    const movementReady = now - lastMoved >= WorldRoom.MOVE_DELAY_MS;
     const movementInput = this.getMovementInput(client.sessionId);
+
+    if (!movementReady) {
+      // Cooldown active: update facing direction only, skip movement simulation
+      const facingDir = movementInput.heldDirection ?? movementInput.bufferedDirection;
+      if (facingDir) player.direction = facingDir;
+      return;
+    }
+
     const simulationResult = this.worldSimulationService.simulateStep({
       guestId: player.guestId,
       heldDirection: movementInput.heldDirection,
@@ -248,6 +263,10 @@ export class WorldRoom extends Room<WorldState> {
     player.tileX = simulationResult.player.tileX;
     player.tileY = simulationResult.player.tileY;
     player.direction = simulationResult.player.direction;
+
+    if (simulationResult.moved) {
+      this.lastMovedAt.set(client.sessionId, now);
+    }
 
     if (simulationResult.consumedBufferedDirection) {
       this.consumeBufferedDirection(client.sessionId);
@@ -473,7 +492,7 @@ export class WorldRoom extends Room<WorldState> {
 
   private safeLeaveClient(client: DiagnosticClient, reason: string): void {
     try {
-      client.leave(Protocol.WS_CLOSE_WITH_ERROR, reason);
+      client.leave?.(Protocol.WS_CLOSE_WITH_ERROR, reason);
     } catch (error) {
       logger.error(
         {
@@ -502,12 +521,13 @@ export class WorldRoom extends Room<WorldState> {
     };
 
     if (methodName === 'onJoin' && 'options' in error) {
+      const joinOptions = error.options as Partial<GuestBootstrapResponse> | undefined;
       context.event = 'room_join_failed';
       context.phase = 'join';
       context.message = 'room join failed';
-      context.requestId = error.options?.requestId;
-      context.guestId = error.options?.guestId;
-      context.mapId = error.options?.mapId ?? this.state?.mapId;
+      context.requestId = joinOptions?.requestId;
+      context.guestId = joinOptions?.guestId;
+      context.mapId = joinOptions?.mapId ?? this.state?.mapId;
     } else if (methodName === 'onMessage' && 'type' in error) {
       const player = this.state.players.get(error.client.sessionId);
       context.event = 'room_message_failed';
@@ -544,6 +564,7 @@ export class WorldRoom extends Room<WorldState> {
 
   private removePlayerState(clientSessionId: string): void {
     this.movementInputs.delete(clientSessionId);
+    this.lastMovedAt.delete(clientSessionId);
     this.visibilityByClient.delete(clientSessionId);
     this.state.players.delete(clientSessionId);
     this.clientRegistry.delete(clientSessionId);

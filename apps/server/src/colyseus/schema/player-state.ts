@@ -2,12 +2,22 @@ import { Schema, defineTypes } from '@colyseus/schema';
 import type { Direction } from '@pokecheetos/shared';
 
 export class PlayerState extends Schema {
-  guestId = '';
-  displayName = '';
-  mapId = '';
-  tileX = 0;
-  tileY = 0;
-  direction: Direction = 'down';
+  declare guestId: string;
+  declare displayName: string;
+  declare mapId: string;
+  declare tileX: number;
+  declare tileY: number;
+  declare direction: Direction;
+
+  constructor() {
+    super();
+    this.guestId = '';
+    this.displayName = '';
+    this.mapId = '';
+    this.tileX = 0;
+    this.tileY = 0;
+    this.direction = 'down';
+  }
 }
 
 defineTypes(PlayerState, {
