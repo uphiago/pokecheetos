@@ -12,6 +12,10 @@ type ResponseLike = {
 
 type FetchLike = (input: string, init?: RequestInit) => Promise<ResponseLike>;
 
+type StorageLike = Pick<Storage, 'getItem' | 'setItem' | 'removeItem'>;
+
+export const GUEST_TOKEN_STORAGE_KEY = 'pokecheetos.guestToken';
+
 export class SessionBootstrapError extends Error {
   readonly code: string;
   readonly status: number;
@@ -27,6 +31,7 @@ export class SessionBootstrapError extends Error {
 export type SessionClientOptions = {
   baseUrl?: string;
   fetchFn?: FetchLike;
+  storage?: StorageLike;
 };
 
 function isBootstrapErrorResponse(payload: unknown): payload is GuestBootstrapErrorResponse {
@@ -43,10 +48,12 @@ function isBootstrapErrorResponse(payload: unknown): payload is GuestBootstrapEr
 export class SessionClient {
   readonly #baseUrl: string;
   readonly #fetchFn: FetchLike;
+  readonly #storage?: StorageLike;
 
   constructor(options: SessionClientOptions = {}) {
     this.#baseUrl = options.baseUrl ?? '';
     this.#fetchFn = options.fetchFn ?? fetch;
+    this.#storage = options.storage ?? resolveDefaultStorage();
   }
 
   async bootstrapGuest(request: GuestBootstrapRequest = {}): Promise<GuestBootstrapResponse> {
@@ -70,4 +77,32 @@ export class SessionClient {
 
     return payload as GuestBootstrapResponse;
   }
+
+  readStoredGuestToken(): string | undefined {
+    const token = this.#storage?.getItem(GUEST_TOKEN_STORAGE_KEY);
+    if (typeof token !== 'string') {
+      return undefined;
+    }
+
+    const normalizedToken = token.trim();
+    return normalizedToken.length > 0 ? normalizedToken : undefined;
+  }
+
+  async bootstrapStoredGuest(): Promise<GuestBootstrapResponse> {
+    const storedGuestToken = this.readStoredGuestToken();
+    const response = await this.bootstrapGuest(
+      storedGuestToken ? { guestToken: storedGuestToken } : {}
+    );
+
+    this.#storage?.setItem(GUEST_TOKEN_STORAGE_KEY, response.guestToken);
+    return response;
+  }
+}
+
+function resolveDefaultStorage(): StorageLike | undefined {
+  if (typeof localStorage === 'undefined') {
+    return undefined;
+  }
+
+  return localStorage;
 }

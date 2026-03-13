@@ -3,69 +3,76 @@ import { describe, it } from 'node:test';
 import { RoomConnectionManager } from './room-connection-manager.ts';
 
 describe('RoomConnectionManager', () => {
-  it('joins a room and reuses the active connection on subsequent calls', async () => {
-    let joinCalls = 0;
+  const bootstrapIdentity = {
+    guestId: 'guest-1',
+    guestToken: 'token-1',
+    displayName: 'Trainer 1',
+    mapId: 'town',
+    tileX: 4,
+    tileY: 7,
+    roomIdHint: 'town:base:1'
+  } as const;
+
+  it('retries a failed join with the same issued bootstrap identity', async () => {
+    const joinCalls: Array<Record<string, unknown>> = [];
     const room = {
-      id: 'room-1',
+      roomId: 'town:base:1',
       async leave() {}
     };
     const manager = new RoomConnectionManager({
-      roomName: 'world',
-      client: {
-        async joinOrCreate(roomName, options) {
-          joinCalls += 1;
-          assert.equal(roomName, 'world');
-          assert.deepEqual(options, { roomIdHint: 'town:base:1' });
+      roomClient: {
+        async joinWorld(options) {
+          joinCalls.push({ ...options });
+          if (joinCalls.length === 1) {
+            throw new Error('temporary join failure');
+          }
+
           return room;
         }
       }
     });
 
-    const firstRoom = await manager.connect({ roomIdHint: 'town:base:1' });
-    const secondRoom = await manager.connect({ roomIdHint: 'town:base:1' });
+    const connectedRoom = await manager.connect({ ...bootstrapIdentity });
 
-    assert.equal(firstRoom, room);
-    assert.equal(secondRoom, room);
-    assert.equal(joinCalls, 1);
+    assert.equal(connectedRoom, room);
+    assert.equal(joinCalls.length, 2);
+    assert.deepEqual(joinCalls[0], bootstrapIdentity);
+    assert.deepEqual(joinCalls[1], bootstrapIdentity);
     assert.equal(manager.getActiveRoom(), room);
   });
 
-  it('reconnects when the requested join options change', async () => {
+  it('reuses the active room when connect is called again with the same identity', async () => {
     let joinCalls = 0;
-    let leaveCalls = 0;
+    const room = {
+      roomId: 'town:base:1',
+      async leave() {}
+    };
     const manager = new RoomConnectionManager({
-      roomName: 'world',
-      client: {
-        async joinOrCreate(_roomName, options) {
+      roomClient: {
+        async joinWorld() {
           joinCalls += 1;
-          return {
-            id: `room-${joinCalls}`,
-            options,
-            async leave() {
-              leaveCalls += 1;
-            }
-          };
+          return room;
         }
       }
     });
 
-    const firstRoom = await manager.connect({ roomIdHint: 'town:base:1' });
-    const secondRoom = await manager.connect({ roomIdHint: 'route-1:base:1' });
+    const firstRoom = await manager.connect({ ...bootstrapIdentity });
+    const secondRoom = await manager.connect({ ...bootstrapIdentity });
 
-    assert.notEqual(firstRoom, secondRoom);
-    assert.equal(joinCalls, 2);
-    assert.equal(leaveCalls, 1);
-    assert.equal(manager.getActiveRoom(), secondRoom);
+    assert.equal(firstRoom, room);
+    assert.equal(secondRoom, room);
+    assert.equal(joinCalls, 1);
   });
 
-  it('leaves the active room and clears local state on disconnect', async () => {
+  it('disconnects the previous room before joining a different hinted room', async () => {
     let leaveCalls = 0;
+    let joinCalls = 0;
     const manager = new RoomConnectionManager({
-      roomName: 'world',
-      client: {
-        async joinOrCreate() {
+      roomClient: {
+        async joinWorld(options) {
+          joinCalls += 1;
           return {
-            id: 'room-2',
+            roomId: String(options.roomIdHint),
             async leave(consented?: boolean) {
               leaveCalls += 1;
               assert.equal(consented, true);
@@ -75,11 +82,78 @@ describe('RoomConnectionManager', () => {
       }
     });
 
-    await manager.connect({});
+    const firstRoom = await manager.connect({ ...bootstrapIdentity });
+    const secondRoom = await manager.connect({
+      ...bootstrapIdentity,
+      roomIdHint: 'town:overflow:2'
+    });
+
+    assert.equal(firstRoom.roomId, 'town:base:1');
+    assert.equal(secondRoom.roomId, 'town:overflow:2');
+    assert.equal(joinCalls, 2);
+    assert.equal(leaveCalls, 1);
+  });
+
+  it('prefers the same room id as reconnect hint after a connection drop', async () => {
+    const joinCalls: Array<Record<string, unknown>> = [];
+    const manager = new RoomConnectionManager({
+      roomClient: {
+        async joinWorld(options) {
+          joinCalls.push({ ...options });
+          if (joinCalls.length === 1) {
+            return {
+              roomId: 'town:overflow:2',
+              async leave() {}
+            };
+          }
+
+          return {
+            roomId: 'town:overflow:2',
+            async leave() {}
+          };
+        }
+      }
+    });
+
+    await manager.connect({ ...bootstrapIdentity });
+    manager.noteConnectionDrop();
+    await manager.reconnect();
+
+    assert.deepEqual(joinCalls[0], bootstrapIdentity);
+    assert.deepEqual(joinCalls[1], {
+      ...bootstrapIdentity,
+      roomIdHint: 'town:overflow:2'
+    });
+  });
+
+  it('switches rooms using transition payloads and clears local state on disconnect', async () => {
+    let leaveCalls = 0;
+    const manager = new RoomConnectionManager({
+      roomClient: {
+        async joinWorld(options) {
+          return {
+            roomId: String(options.roomIdHint),
+            async leave(consented?: boolean) {
+              leaveCalls += 1;
+              assert.equal(consented, true);
+            }
+          };
+        }
+      }
+    });
+
+    await manager.connect({ ...bootstrapIdentity });
+    const transitionedRoom = await manager.transitionTo({
+      type: 'map_transition',
+      mapId: 'route-1',
+      roomIdHint: 'route-1:base:1'
+    });
+
+    assert.equal(transitionedRoom.roomId, 'route-1:base:1');
     await manager.disconnect();
     await manager.disconnect();
 
-    assert.equal(leaveCalls, 1);
+    assert.equal(leaveCalls, 2);
     assert.equal(manager.getActiveRoom(), null);
   });
 });

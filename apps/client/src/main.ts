@@ -7,11 +7,9 @@ async function bootstrapClient() {
     throw new Error('Expected #app mount node');
   }
 
-  mountNode.dataset.client = 'booting';
-
   const phaserModule = await import('phaser');
 
-  createGame({
+  await createGame({
     parent: mountNode,
     phaserModule: {
       AUTO: phaserModule.AUTO,
@@ -19,8 +17,6 @@ async function bootstrapClient() {
     },
     scenes: []
   });
-
-  mountNode.dataset.client = 'ready';
 }
 
 void bootstrapClient();
