@@ -63,6 +63,12 @@ pnpm test
 pnpm --filter @pokecheetos/testing test -- packages/testing/src/smoke/workspace-smoke.test.ts
 ```
 
+## Observability Notes
+
+- Client bootstrap failures are mapped to stable codes in `apps/client/src/bootstrap/client-error-mapper.ts`.
+- Server bootstrap logs are emitted as structured JSON with `event`, `requestId`, `phase`, and error fields.
+- Browser-console triage guidance lives in `docs/observability/browser-console-noise.md`.
+
 ## Load Test
 
 ```bash

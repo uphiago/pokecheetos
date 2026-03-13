@@ -30,8 +30,8 @@ describe('createGame', () => {
       showConnected(input: { session: typeof bootstrapIdentity; room: typeof room }) {
         order.push(`ui:connected:${input.session.guestId}:${input.room.roomId}`);
       },
-      showError(message: string) {
-        order.push(`ui:error:${message}`);
+      showError(input: { message: string; code?: string }) {
+        order.push(`ui:error:${input.code ?? 'none'}:${input.message}`);
       }
     };
 
@@ -82,6 +82,7 @@ describe('createGame', () => {
 
   it('reports bootstrap failures to the ui shell before rethrowing the error', async () => {
     const order: string[] = [];
+    const reportedCodes: string[] = [];
     const expectedError = new Error('bootstrap unavailable');
 
     await assert.rejects(
@@ -107,9 +108,12 @@ describe('createGame', () => {
             showConnected() {
               order.push('ui:connected');
             },
-            showError(message: string) {
-              order.push(`ui:error:${message}`);
+            showError(input: { message: string; code?: string }) {
+              order.push(`ui:error:${input.code}:${input.message}`);
             }
+          },
+          errorReporter(mappedError) {
+            reportedCodes.push(mappedError.code);
           },
           gameFactory: () => {
             order.push('game:create');
@@ -122,7 +126,8 @@ describe('createGame', () => {
     assert.deepEqual(order, [
       'ui:booting',
       'session:bootstrap',
-      'ui:error:bootstrap unavailable'
+      'ui:error:UNKNOWN:The client failed to start. Check the console for technical details.'
     ]);
+    assert.deepEqual(reportedCodes, ['UNKNOWN']);
   });
 });

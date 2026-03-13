@@ -10,6 +10,7 @@ export type UiShellBridgeState = {
   guestId?: string;
   roomId?: string;
   error?: string;
+  errorCode?: string;
 };
 
 export class UiShellBridge {
@@ -34,10 +35,11 @@ export class UiShellBridge {
     this.#writeDataset();
   }
 
-  showError(message: string): void {
+  showError(input: { message: string; code?: string }): void {
     this.#state = {
       status: 'error',
-      error: message
+      error: input.message,
+      errorCode: input.code
     };
     this.#writeDataset();
   }
@@ -55,5 +57,6 @@ export class UiShellBridge {
     this.#root.dataset.guestId = this.#state.guestId;
     this.#root.dataset.roomId = this.#state.roomId;
     this.#root.dataset.error = this.#state.error;
+    this.#root.dataset.errorCode = this.#state.errorCode;
   }
 }

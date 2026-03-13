@@ -3,6 +3,13 @@ import { RoomConnectionManager } from '../network/room-connection-manager.ts';
 import { createRoomClient, type RoomLike, type RoomClient as RoomClientInstance } from '../network/room-client.ts';
 import { SessionClient } from '../session/session-client.ts';
 import { UiShellBridge } from '../ui/ui-shell-bridge.ts';
+import {
+  hasClientBootstrapErrorReport,
+  mapClientBootstrapError,
+  markClientBootstrapErrorReported,
+  reportClientBootstrapError,
+  type ClientBootstrapError
+} from './client-error-mapper.ts';
 
 export type GameLike = {
   destroy(removeCanvas?: boolean): void;
@@ -38,7 +45,7 @@ type RoomConnectionManagerLike<TRoom extends RoomLike> = {
 type UiShellBridgeLike<TRoom extends RoomLike> = {
   showBooting(): void;
   showConnected(input: { session: GuestBootstrapResponse; room: TRoom }): void;
-  showError(message: string): void;
+  showError(input: { message: string; code?: string }): void;
 };
 
 export type CreateGameOptions<TRoom extends RoomLike = RoomLike> = {
@@ -54,6 +61,7 @@ export type CreateGameOptions<TRoom extends RoomLike = RoomLike> = {
   roomConnectionManager?: RoomConnectionManagerLike<TRoom>;
   uiShellBridge?: UiShellBridgeLike<TRoom>;
   createUiShellBridge?: (parent: string | HTMLElement) => UiShellBridgeLike<TRoom>;
+  errorReporter?: (error: ClientBootstrapError) => void;
 };
 
 const DEFAULT_SCENE_LIST: unknown[] = [];
@@ -89,6 +97,7 @@ export async function createGame<TRoom extends RoomLike = RoomLike>(
   const sessionClient = options.sessionClient ?? new SessionClient({ baseUrl: options.baseUrl });
   const roomConnectionManager =
     options.roomConnectionManager ?? createDefaultRoomConnectionManager(options);
+  const errorReporter = options.errorReporter ?? reportClientBootstrapError;
 
   uiShellBridge.showBooting();
 
@@ -99,7 +108,15 @@ export async function createGame<TRoom extends RoomLike = RoomLike>(
     session = await sessionClient.bootstrapStoredGuest();
     room = await roomConnectionManager.connect(session);
   } catch (error) {
-    uiShellBridge.showError(error instanceof Error ? error.message : 'Unknown bootstrap error');
+    const mappedError = mapClientBootstrapError(error);
+    uiShellBridge.showError({
+      code: mappedError.code,
+      message: mappedError.userMessage
+    });
+    if (!hasClientBootstrapErrorReport(error)) {
+      errorReporter(mappedError);
+      markClientBootstrapErrorReported(error);
+    }
     throw error;
   }
 

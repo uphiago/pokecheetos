@@ -1,13 +1,19 @@
 import { createGame } from './bootstrap/create-game.js';
+import {
+  hasClientBootstrapErrorReport,
+  mapClientBootstrapError,
+  markClientBootstrapErrorReported,
+  reportClientBootstrapError
+} from './bootstrap/client-error-mapper.js';
 
 async function bootstrapClient() {
   const mountNode = document.querySelector<HTMLElement>('#app');
 
-  if (!mountNode) {
-    throw new Error('Expected #app mount node');
-  }
-
   try {
+    if (!mountNode) {
+      throw new Error('Expected #app mount node');
+    }
+
     const phaserModule = await import('phaser');
     const apiBaseUrl = (import.meta.env?.VITE_API_BASE_URL as string | undefined) ?? 'http://localhost:3001';
     const roomEndpoint =
@@ -24,9 +30,14 @@ async function bootstrapClient() {
       scenes: []
     });
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'Erro inesperado no bootstrap';
-    mountNode.innerHTML = `<pre style="color:#fff;background:#330;padding:12px">${message}</pre>`;
-    console.error(error);
+    const mappedError = mapClientBootstrapError(error);
+    if (!hasClientBootstrapErrorReport(error)) {
+      reportClientBootstrapError(mappedError);
+      markClientBootstrapErrorReported(error);
+    }
+    if (mountNode) {
+      mountNode.innerHTML = `<pre style="color:#fff;background:#330;padding:12px">${mappedError.code}: ${mappedError.userMessage}</pre>`;
+    }
   }
 }
 
