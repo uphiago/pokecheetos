@@ -1158,11 +1158,11 @@ Rewrite `README.md` to cover:
 - tests and load test commands
 - current v1 scope and out-of-scope items
 
-- [ ] **Step 4: Remove the legacy prototype directories**
+- [x] **Step 4: Remove the legacy prototype directories**
 
 Delete `client/` and `server/` only after the replacement apps and docs are green.
 
-- [ ] **Step 5: Run final verification**
+- [x] **Step 5: Run final verification**
 
 Run: `pnpm lint`
 Expected: PASS
@@ -1281,4 +1281,13 @@ Plan complete and saved to `docs/superpowers/plans/2026-03-13-pokecheetos-founda
   - `pnpm --filter @pokecheetos/client test -- apps/client/src/world/world-store.test.ts apps/client/src/world/entity-presenter.test.ts` ✅
   - `pnpm --filter @pokecheetos/client typecheck` ✅
   - `pnpm --filter @pokecheetos/client build` ✅ (non-blocking Vite chunk-size warning only)
+  - Notes: no blocking issue found in this block.
+- [x] 2026-03-13 09:29 BRT — task 11 final verification + legacy-readme alignment block
+  - Reconciled Task 11 Step 4/5 checklist state after confirming legacy `client/` and `server/` folders are absent.
+  - Updated `README.md` Legacy Prototype section to reflect completed migration.
+  - `pnpm lint` ✅
+  - `pnpm typecheck` ✅
+  - `pnpm test` ✅
+  - `pnpm --filter @pokecheetos/client build` ✅ (non-blocking Vite chunk-size warning only)
+  - `pnpm --filter @pokecheetos/server exec tsx src/loadtest/world-room.loadtest.ts --clients 50 --duration-ms 120000 --map-id town` ✅
   - Notes: no blocking issue found in this block.

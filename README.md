@@ -89,4 +89,4 @@ pnpm --filter @pokecheetos/server exec tsx src/loadtest/world-room.loadtest.ts -
 
 ## Legacy Prototype
 
-The old `client/` and `server/` prototype folders remain temporarily while migration tasks complete. They will be removed once full baseline verification is green.
+The old `client/` and `server/` prototype folders were removed after migrating to `apps/client` and `apps/server`.
