@@ -1130,7 +1130,7 @@ git commit -m "feat: render authoritative world and npc dialogue in phaser"
 - Delete: `client/**`
 - Delete: `server/**`
 
-- [ ] **Step 1: Write the failing testing-package smoke test**
+- [x] **Step 1: Write the failing testing-package smoke test**
 
 Create `packages/testing/src/smoke/workspace-smoke.test.ts` that imports and exercises:
 
@@ -1143,11 +1143,11 @@ Create `packages/testing/src/smoke/workspace-smoke.test.ts` that imports and exe
 Run: `pnpm exec vitest run packages/testing/src/smoke/workspace-smoke.test.ts`
 Expected: FAIL because the package does not exist yet
 
-- [ ] **Step 2: Implement the testing package**
+- [x] **Step 2: Implement the testing package**
 
 Create `packages/testing/package.json`, `tsconfig.json`, `src/index.ts`, `src/maps/fixtures.ts`, `src/server/create-test-room.ts`, and `src/session/fixtures.ts`.
 
-- [ ] **Step 3: Update the root README**
+- [x] **Step 3: Update the root README**
 
 Rewrite `README.md` to cover:
 
@@ -1179,7 +1179,7 @@ Expected: PASS
 Run: `pnpm --filter @pokecheetos/server exec tsx src/loadtest/world-room.loadtest.ts --clients 50 --duration-ms 120000 --map-id town`
 Expected: PASS
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add README.md packages/testing apps packages client server
@@ -1290,4 +1290,9 @@ Plan complete and saved to `docs/superpowers/plans/2026-03-13-pokecheetos-founda
   - `pnpm test` ✅
   - `pnpm --filter @pokecheetos/client build` ✅ (non-blocking Vite chunk-size warning only)
   - `pnpm --filter @pokecheetos/server exec tsx src/loadtest/world-room.loadtest.ts --clients 50 --duration-ms 120000 --map-id town` ✅
+  - Notes: no blocking issue found in this block.
+- [x] 2026-03-13 09:47 BRT — task 11 testing-package checklist reconciliation block
+  - Reconciled Task 11 Step 1/2/3/6 checklist state with already-landed testing package + README updates.
+  - `pnpm exec vitest run packages/testing/src/smoke/workspace-smoke.test.ts` ✅
+  - `pnpm --filter @pokecheetos/testing typecheck` ✅
   - Notes: no blocking issue found in this block.
