@@ -265,4 +265,68 @@ describe('WorldRoom join lifecycle', () => {
       })
     );
   });
+
+  it('restores player authoritative state when reconnecting within the configured window', async () => {
+    vi.useFakeTimers();
+    const room = new WorldRoom({
+      presenceService: createPresenceService(),
+      clientRegistry: new Map()
+    });
+    room.onCreate({ mapId: 'town', roomId: 'town:base:1', maxClients: 50 });
+
+    await room.onJoin(
+      {
+        sessionId: 'session-1',
+        leave: vi.fn(),
+        send: vi.fn()
+      } as any,
+      {
+        guestId: 'guest-1',
+        guestToken: 'token-1',
+        displayName: 'Guest 1',
+        mapId: 'town',
+        tileX: 5,
+        tileY: 6,
+        roomIdHint: 'town:base:1'
+      }
+    );
+
+    const original = room.state.players.get('session-1');
+    original!.tileX = 11;
+    original!.tileY = 12;
+    original!.direction = 'left';
+
+    room.onLeave({ sessionId: 'session-1' }, false);
+    vi.advanceTimersByTime(1_000);
+
+    await room.onJoin(
+      {
+        sessionId: 'session-2',
+        leave: vi.fn(),
+        send: vi.fn()
+      } as any,
+      {
+        guestId: 'guest-1',
+        guestToken: 'token-1',
+        displayName: 'Guest 1 New Bootstrap',
+        mapId: 'town',
+        tileX: 1,
+        tileY: 1,
+        roomIdHint: 'town:base:2'
+      }
+    );
+
+    expect(room.state.players.get('session-2')).toEqual(
+      expect.objectContaining({
+        guestId: 'guest-1',
+        displayName: 'Guest 1',
+        mapId: 'town',
+        tileX: 11,
+        tileY: 12,
+        direction: 'left'
+      })
+    );
+
+    vi.useRealTimers();
+  });
 });

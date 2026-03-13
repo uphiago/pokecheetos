@@ -1245,3 +1245,10 @@ Plan complete and saved to `docs/superpowers/plans/2026-03-13-pokecheetos-founda
   - `pnpm --filter @pokecheetos/server test -- apps/server/src/colyseus/rooms/world-room.test.ts` ✅
   - `pnpm --filter @pokecheetos/server typecheck` ✅
   - Notes: reconnect reservation reuse is still pending before full Task 7 closure.
+- [x] 2026-03-13 07:29 BRT — task 7 reconnect reservation block
+  - Added room-level reconnect reservations in `WorldRoom` with `runtimeConfig.reconnectWindowMs` TTL and automatic expiry cleanup.
+  - Updated leave/join lifecycle to reserve authoritative player snapshot on disconnect and restore snapshot when the same guest reconnects within window.
+  - Added focused `world-room.test.ts` coverage for reconnect-state restore behavior.
+  - `pnpm --filter @pokecheetos/server test -- apps/server/src/colyseus/rooms/world-room.test.ts` ✅
+  - `pnpm --filter @pokecheetos/server typecheck` ✅
+  - Notes: no blocking issue found in this block.

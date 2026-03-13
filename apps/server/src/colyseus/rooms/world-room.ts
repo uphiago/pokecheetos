@@ -31,6 +31,18 @@ type MovementInputState = {
   bufferedDirection?: Direction;
 };
 
+type ReconnectReservation = {
+  expiresAt: number;
+  player: {
+    guestId: string;
+    displayName: string;
+    mapId: string;
+    tileX: number;
+    tileY: number;
+    direction: Direction;
+  };
+};
+
 type WorldRoomDependencies = {
   npcInteractionService?: NpcInteractionService;
   worldSimulationService?: Pick<WorldSimulationService, 'simulateStep'>;
@@ -55,6 +67,7 @@ export class WorldRoom extends Room<WorldState> {
   private readonly clientRegistry: Map<string, RegisteredClientConnection>;
   private readonly movementInputs = new Map<string, MovementInputState>();
   private readonly visibilityByClient = new Map<string, Set<string>>();
+  private readonly reconnectReservations = new Map<string, ReconnectReservation>();
 
   constructor(dependencies: WorldRoomDependencies = {}) {
     super();
@@ -106,6 +119,8 @@ export class WorldRoom extends Room<WorldState> {
   }
 
   onJoin(client: Pick<Client, 'sessionId' | 'leave'>, options: GuestBootstrapResponse): void {
+    this.cleanupExpiredReconnectReservations();
+
     const registration = this.presenceService.register({
       connectionId: client.sessionId,
       guestId: options.guestId,
@@ -119,14 +134,20 @@ export class WorldRoom extends Room<WorldState> {
       displacedClient?.leave(4000, 'duplicate guest connection');
     }
 
-    this.state.players.set(client.sessionId, this.createPlayerState(options));
+    this.state.players.set(client.sessionId, this.resolveJoinPlayerState(options));
     this.clientRegistry.set(client.sessionId, {
       leave: (code?: number, data?: string) => client.leave(code, data),
       removePlayerState: () => this.removePlayerState(client.sessionId)
     });
   }
 
-  onLeave(client: Pick<Client, 'sessionId'>): void {
+  onLeave(client: Pick<Client, 'sessionId'>, consented?: boolean): void {
+    this.cleanupExpiredReconnectReservations();
+
+    if (!consented) {
+      this.reserveForReconnect(client.sessionId);
+    }
+
     this.presenceService.unregister(client.sessionId);
     this.removePlayerState(client.sessionId);
   }
@@ -296,6 +317,23 @@ export class WorldRoom extends Room<WorldState> {
     client.send(errorEvent.type, errorEvent);
   }
 
+  private resolveJoinPlayerState(identity: GuestBootstrapResponse): PlayerState {
+    const reservation = this.reconnectReservations.get(identity.guestId);
+    if (!reservation) {
+      return this.createPlayerState(identity);
+    }
+
+    this.reconnectReservations.delete(identity.guestId);
+    const player = new PlayerState();
+    player.guestId = reservation.player.guestId;
+    player.displayName = reservation.player.displayName;
+    player.mapId = reservation.player.mapId;
+    player.tileX = reservation.player.tileX;
+    player.tileY = reservation.player.tileY;
+    player.direction = reservation.player.direction;
+    return player;
+  }
+
   private createPlayerState(identity: GuestBootstrapResponse): PlayerState {
     const player = new PlayerState();
     player.guestId = identity.guestId;
@@ -305,6 +343,35 @@ export class WorldRoom extends Room<WorldState> {
     player.tileY = identity.tileY;
     player.direction = 'down';
     return player;
+  }
+
+  private reserveForReconnect(clientSessionId: string): void {
+    const player = this.state.players.get(clientSessionId);
+    if (!player) {
+      return;
+    }
+
+    this.reconnectReservations.set(player.guestId, {
+      expiresAt: Date.now() + runtimeConfig.reconnectWindowMs,
+      player: {
+        guestId: player.guestId,
+        displayName: player.displayName,
+        mapId: player.mapId,
+        tileX: player.tileX,
+        tileY: player.tileY,
+        direction: player.direction
+      }
+    });
+  }
+
+  private cleanupExpiredReconnectReservations(): void {
+    const now = Date.now();
+
+    for (const [guestId, reservation] of this.reconnectReservations.entries()) {
+      if (reservation.expiresAt <= now) {
+        this.reconnectReservations.delete(guestId);
+      }
+    }
   }
 
   private removePlayerState(clientSessionId: string): void {
