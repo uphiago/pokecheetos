@@ -885,7 +885,7 @@ git commit -m "feat: add authoritative rooms and world simulation"
 - Create: `apps/server/src/loadtest/world-room.loadtest.ts`
 - Test: `apps/server/src/services/npc-interaction-service.test.ts`
 
-- [ ] **Step 1: Write the failing NPC interaction tests**
+- [x] **Step 1: Write the failing NPC interaction tests**
 
 Create `apps/server/src/services/npc-interaction-service.test.ts` with cases for:
 
@@ -894,7 +894,7 @@ Create `apps/server/src/services/npc-interaction-service.test.ts` with cases for
 - non-adjacent interaction is rejected
 - wrong-facing interaction is rejected
 
-- [ ] **Step 2: Run tests to verify they fail**
+- [x] **Step 2: Run tests to verify they fail**
 
 Run: `pnpm --filter @pokecheetos/server test -- apps/server/src/services/npc-interaction-service.test.ts`
 Expected: FAIL because the service does not exist yet
@@ -933,7 +933,7 @@ Expected: PASS
 Run: `pnpm --filter @pokecheetos/server exec tsx src/loadtest/world-room.loadtest.ts --clients 5 --duration-ms 5000 --map-id town`
 Expected: PASS
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add apps/server/src/services/npc-interaction-service.ts apps/server/src/loadtest apps/server/src/services/npc-interaction-service.test.ts apps/server/src/colyseus/rooms/world-room.ts
@@ -1214,3 +1214,7 @@ Plan complete and saved to `docs/superpowers/plans/2026-03-13-pokecheetos-founda
   - `pnpm test` ✅
   - `pnpm --filter @pokecheetos/client build` ✅
   - Notes: no blocking issue found in this verification pass.
+- [x] 2026-03-13 05:27 BRT — task 8 closure verification block
+  - `pnpm --filter @pokecheetos/server test -- apps/server/src/services/npc-interaction-service.test.ts` ✅
+  - `pnpm --filter @pokecheetos/server exec tsx src/loadtest/world-room.loadtest.ts --clients 5 --duration-ms 5000 --map-id town` ✅
+  - Notes: task 8 checklist reconciled with implemented commits; no blocking issue found.
