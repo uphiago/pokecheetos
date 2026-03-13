@@ -9,6 +9,8 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
+    "@pokecheetos/config": "workspace:*",
+    "@pokecheetos/shared": "workspace:*",
     "better-sqlite3": "^12.4.1",
     "colyseus": "^0.16.5",
     "drizzle-orm": "^0.44.5",
