@@ -20,8 +20,8 @@ export class SessionBootstrapError extends Error {
   readonly code: string;
   readonly status: number;
 
-  constructor(status: number, code: string, message: string) {
-    super(message);
+  constructor(status: number, code: string, message: string, options?: ErrorOptions) {
+    super(message, options);
     this.name = 'SessionBootstrapError';
     this.code = code;
     this.status = status;
@@ -59,13 +59,24 @@ export class SessionClient {
   }
 
   async bootstrapGuest(request: GuestBootstrapRequest = {}): Promise<GuestBootstrapResponse> {
-    const response = await this.#fetchFn(`${this.#baseUrl}/api/session/guest`, {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json'
-      },
-      body: JSON.stringify(request)
-    });
+    let response: ResponseLike;
+
+    try {
+      response = await this.#fetchFn(`${this.#baseUrl}/api/session/guest`, {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json'
+        },
+        body: JSON.stringify(request)
+      });
+    } catch (error) {
+      throw new SessionBootstrapError(
+        0,
+        'network_fetch_failed',
+        'Unable to reach the session service',
+        { cause: error }
+      );
+    }
 
     const payload = (await response.json()) as unknown;
 

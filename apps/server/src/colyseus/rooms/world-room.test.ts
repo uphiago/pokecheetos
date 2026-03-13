@@ -1,7 +1,12 @@
+import { Protocol } from 'colyseus';
 import { createPresenceService } from '../../services/presence-service';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { PlayerState } from '../schema/player-state';
 import { WorldRoom } from './world-room';
+
+afterEach(() => {
+  vi.restoreAllMocks();
+});
 
 describe('WorldRoom move_intent', () => {
   it('tracks pressed and released direction state', () => {
@@ -252,6 +257,52 @@ describe('WorldRoom npc_interact', () => {
 });
 
 describe('WorldRoom join lifecycle', () => {
+  it('logs join failures with request and guest context and closes the client gracefully', async () => {
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const leave = vi.fn();
+    const room = new WorldRoom({
+      presenceService: {
+        register() {
+          throw new Error('presence unavailable');
+        },
+        unregister() {}
+      }
+    });
+    room.onCreate({ mapId: 'town', roomId: 'town:base:1', maxClients: 50 });
+
+    await expect(
+      room.onJoin(
+        {
+          sessionId: 'session-join-failure',
+          leave
+        } as any,
+        {
+          requestId: 'req-123',
+          guestId: 'guest-join-failure',
+          guestToken: 'token-1',
+          displayName: 'Guest Failure',
+          mapId: 'town',
+          tileX: 5,
+          tileY: 6,
+          roomIdHint: 'town:base:1'
+        }
+      )
+    ).rejects.toThrow('presence unavailable');
+
+    expect(leave).toHaveBeenCalledWith(Protocol.WS_CLOSE_WITH_ERROR, 'room join failed');
+    expect(JSON.parse(String(errorSpy.mock.calls[0]?.[0]))).toMatchObject({
+      level: 'error',
+      event: 'room_join_failed',
+      phase: 'join',
+      requestId: 'req-123',
+      guestId: 'guest-join-failure',
+      sessionId: 'session-join-failure',
+      roomId: 'town:base:1',
+      mapId: 'town',
+      errorMessage: 'presence unavailable'
+    });
+  });
+
   it('ejects the older gameplay connection when the same guest joins twice', async () => {
     const leave = vi.fn();
     const room = new WorldRoom({
@@ -369,5 +420,87 @@ describe('WorldRoom join lifecycle', () => {
     );
 
     vi.useRealTimers();
+  });
+
+  it('logs patch serialization failures and disconnects affected clients without crashing the room process', () => {
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const leave = vi.fn();
+    const room = new WorldRoom();
+    room.onCreate({ mapId: 'town', roomId: 'town:base:1', maxClients: 50 });
+
+    const player = new PlayerState();
+    player.guestId = 'guest-serialize';
+    player.displayName = 'Serialize Guest';
+    player.mapId = 'town';
+    player.tileX = 2;
+    player.tileY = 3;
+    player.direction = 'down';
+    room.state.players.set('session-serialize', player);
+    room.clients.push({
+      sessionId: 'session-serialize',
+      state: 1,
+      leave
+    } as any);
+
+    (room as any)._serializer = {
+      applyPatches() {
+        throw new Error('state encode exploded');
+      }
+    };
+
+    expect(room.broadcastPatch()).toBe(false);
+    expect(leave).toHaveBeenCalledWith(Protocol.WS_CLOSE_WITH_ERROR, 'room state patch failed');
+    expect(JSON.parse(String(errorSpy.mock.calls[0]?.[0]))).toMatchObject({
+      level: 'error',
+      event: 'room_state_patch_failed',
+      phase: 'serialize',
+      roomId: 'town:base:1',
+      mapId: 'town',
+      sessionIds: ['session-serialize'],
+      guestIds: ['guest-serialize'],
+      errorMessage: 'state encode exploded'
+    });
+  });
+
+  it('logs full-state serialization failures and disconnects the joining client gracefully', () => {
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const leave = vi.fn();
+    const raw = vi.fn();
+    const room = new WorldRoom();
+    room.onCreate({ mapId: 'town', roomId: 'town:base:1', maxClients: 50 });
+
+    const player = new PlayerState();
+    player.guestId = 'guest-full-state';
+    player.displayName = 'Full State Guest';
+    player.mapId = 'town';
+    player.tileX = 4;
+    player.tileY = 4;
+    player.direction = 'down';
+    room.state.players.set('session-full-state', player);
+
+    (room as any)._serializer = {
+      getFullState() {
+        throw new Error('full state encode exploded');
+      }
+    };
+
+    room.sendFullState({
+      sessionId: 'session-full-state',
+      leave,
+      raw
+    } as any);
+
+    expect(raw).not.toHaveBeenCalled();
+    expect(leave).toHaveBeenCalledWith(Protocol.WS_CLOSE_WITH_ERROR, 'room full state failed');
+    expect(JSON.parse(String(errorSpy.mock.calls[0]?.[0]))).toMatchObject({
+      level: 'error',
+      event: 'room_full_state_failed',
+      phase: 'serialize',
+      guestId: 'guest-full-state',
+      sessionId: 'session-full-state',
+      roomId: 'town:base:1',
+      mapId: 'town',
+      errorMessage: 'full state encode exploded'
+    });
   });
 });

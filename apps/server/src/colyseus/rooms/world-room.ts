@@ -1,4 +1,4 @@
-import { Room, type Client } from 'colyseus';
+import { Protocol, Room, type Client, type RoomException } from 'colyseus';
 import { runtimeConfig } from '@pokecheetos/config';
 import { loadCompiledMap } from '@pokecheetos/maps';
 import type {
@@ -11,6 +11,7 @@ import type {
   MapTransitionEvent
 } from '@pokecheetos/shared';
 import { isTileVisible } from '@pokecheetos/shared';
+import { logger } from '../../logging/logger';
 import { createNpcInteractionService, type NpcInteractionService } from '../../services/npc-interaction-service';
 import { createPresenceService, type PresenceService } from '../../services/presence-service';
 import {
@@ -57,6 +58,8 @@ type RegisteredClientConnection = {
   leave: (code?: number, data?: string) => void;
   removePlayerState: () => void;
 };
+
+type DiagnosticClient = Pick<Client, 'sessionId' | 'leave'>;
 
 const defaultPresenceService = createPresenceService();
 const defaultClientRegistry = new Map<string, RegisteredClientConnection>();
@@ -141,6 +144,7 @@ export class WorldRoom extends Room<WorldState> {
       leave: (code?: number, data?: string) => client.leave(code, data),
       removePlayerState: () => this.removePlayerState(client.sessionId)
     });
+
   }
 
   onLeave(client: Pick<Client, 'sessionId'>, consented?: boolean): void {
@@ -279,6 +283,77 @@ export class WorldRoom extends Room<WorldState> {
     return { entered, left };
   }
 
+  override sendFullState(client: Client): void {
+    try {
+      super.sendFullState(client);
+    } catch (error) {
+      const player = this.state.players.get(client.sessionId);
+
+      logger.error(
+        {
+          event: 'room_full_state_failed',
+          phase: 'serialize',
+          guestId: player?.guestId,
+          sessionId: client.sessionId,
+          roomId: this.roomId,
+          mapId: player?.mapId ?? this.state.mapId,
+          error
+        },
+        'room full state serialization failed'
+      );
+
+      this.safeLeaveClient(client, 'room full state failed');
+    }
+  }
+
+  override broadcastPatch(): boolean {
+    try {
+      return super.broadcastPatch();
+    } catch (error) {
+      logger.error(
+        {
+          event: 'room_state_patch_failed',
+          phase: 'serialize',
+          roomId: this.roomId,
+          mapId: this.state.mapId,
+          sessionIds: this.clients.map((client) => client.sessionId),
+          guestIds: this.clients
+            .map((client) => this.state.players.get(client.sessionId)?.guestId)
+            .filter((guestId): guestId is string => Boolean(guestId)),
+          error
+        },
+        'room state patch serialization failed'
+      );
+
+      for (const client of this.clients) {
+        this.safeLeaveClient(client, 'room state patch failed');
+      }
+
+      return false;
+    }
+  }
+
+  onUncaughtException(
+    error: RoomException<this>,
+    methodName: 'onCreate' | 'onAuth' | 'onJoin' | 'onLeave' | 'onDispose' | 'onMessage' | 'setSimulationInterval' | 'setInterval' | 'setTimeout'
+  ): void {
+    const context = this.buildExceptionContext(error, methodName);
+
+    logger.error(
+      {
+        ...context,
+        error: error.cause instanceof Error ? error.cause : error,
+        exceptionName: error.name
+      },
+      context.message
+    );
+
+    if ('client' in error && error.client) {
+      const reason = methodName === 'onJoin' ? 'room join failed' : 'room runtime failed';
+      this.safeLeaveClient(error.client, reason);
+    }
+  }
+
   handleNpcInteract(client: Pick<Client, 'sessionId' | 'send'>, npcId: string): void {
     const player = this.state.players.get(client.sessionId);
     if (!player) {
@@ -374,6 +449,77 @@ export class WorldRoom extends Room<WorldState> {
         this.reconnectReservations.delete(guestId);
       }
     }
+  }
+
+  private safeLeaveClient(client: DiagnosticClient, reason: string): void {
+    try {
+      client.leave(Protocol.WS_CLOSE_WITH_ERROR, reason);
+    } catch (error) {
+      logger.error(
+        {
+          event: 'room_client_leave_failed',
+          phase: 'leave',
+          sessionId: client.sessionId,
+          roomId: this.roomId,
+          mapId: this.state?.mapId,
+          error
+        },
+        'room client leave failed'
+      );
+    }
+  }
+
+  private buildExceptionContext(
+    error: RoomException<this>,
+    methodName: 'onCreate' | 'onAuth' | 'onJoin' | 'onLeave' | 'onDispose' | 'onMessage' | 'setSimulationInterval' | 'setInterval' | 'setTimeout'
+  ): Record<string, unknown> & { message: string } {
+    const context: Record<string, unknown> & { message: string } = {
+      event: 'room_uncaught_exception',
+      phase: 'lifecycle',
+      roomId: this.roomId,
+      mapId: this.state?.mapId,
+      message: 'room lifecycle failed'
+    };
+
+    if (methodName === 'onJoin' && 'options' in error) {
+      context.event = 'room_join_failed';
+      context.phase = 'join';
+      context.message = 'room join failed';
+      context.requestId = error.options?.requestId;
+      context.guestId = error.options?.guestId;
+      context.mapId = error.options?.mapId ?? this.state?.mapId;
+    } else if (methodName === 'onMessage' && 'type' in error) {
+      const player = this.state.players.get(error.client.sessionId);
+      context.event = 'room_message_failed';
+      context.phase = error.type === 'npc_interact' ? 'interact' : 'simulate';
+      context.message = 'room message failed';
+      context.guestId = player?.guestId;
+      context.sessionId = error.client.sessionId;
+      context.messageType = error.type;
+      context.mapId = player?.mapId ?? this.state?.mapId;
+    } else if (methodName === 'setSimulationInterval') {
+      context.event = 'room_simulation_failed';
+      context.phase = 'simulate';
+      context.message = 'room simulation failed';
+      context.sessionIds = this.clients.map((client) => client.sessionId);
+      context.guestIds = this.clients
+        .map((client) => this.state.players.get(client.sessionId)?.guestId)
+        .filter((guestId): guestId is string => Boolean(guestId));
+    } else if (methodName === 'onLeave' && 'client' in error) {
+      const player = this.state.players.get(error.client.sessionId);
+      context.event = 'room_leave_failed';
+      context.phase = 'leave';
+      context.message = 'room leave failed';
+      context.guestId = player?.guestId;
+      context.sessionId = error.client.sessionId;
+      context.mapId = player?.mapId ?? this.state?.mapId;
+    }
+
+    if ('client' in error && error.client && context.sessionId === undefined) {
+      context.sessionId = error.client.sessionId;
+    }
+
+    return context;
   }
 
   private removePlayerState(clientSessionId: string): void {

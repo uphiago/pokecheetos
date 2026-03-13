@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'vitest';
 import { createGame } from './create-game.ts';
+import { SessionBootstrapError } from '../session/session-client.ts';
 
 describe('createGame', () => {
   it('bootstraps the session, connects the room once, creates the ui shell, and starts Phaser', async () => {
@@ -82,7 +83,11 @@ describe('createGame', () => {
 
   it('reports bootstrap failures to the ui shell before rethrowing the error', async () => {
     const order: string[] = [];
-    const expectedError = new Error('bootstrap unavailable');
+    const expectedError = new SessionBootstrapError(
+      0,
+      'network_fetch_failed',
+      'Unable to reach the session service'
+    );
 
     await assert.rejects(
       () =>
@@ -122,7 +127,7 @@ describe('createGame', () => {
     assert.deepEqual(order, [
       'ui:booting',
       'session:bootstrap',
-      'ui:error:bootstrap unavailable'
+      'ui:error:Could not reach the session service. Check the server and network.'
     ]);
   });
 });
