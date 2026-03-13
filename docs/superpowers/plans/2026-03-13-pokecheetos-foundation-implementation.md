@@ -440,7 +440,7 @@ git commit -m "feat: add shared config and runtime constants"
 - Test: `packages/shared/src/protocol/server-to-client.test.ts`
 - Test: `packages/shared/src/world/visibility.test.ts`
 
-- [ ] **Step 1: Write the failing helper and protocol tests**
+- [x] **Step 1: Write the failing helper and protocol tests**
 
 Create `packages/shared/src/grid/tiles.test.ts` with tile movement and tile-to-pixel assertions.
 
@@ -462,12 +462,12 @@ Create `packages/shared/src/protocol/server-to-client.test.ts` with assertions f
 
 Create `packages/shared/src/world/visibility.test.ts` with rectangle include/exclude assertions.
 
-- [ ] **Step 2: Run tests to verify they fail**
+- [x] **Step 2: Run tests to verify they fail**
 
 Run: `pnpm exec vitest run packages/shared/src/grid/tiles.test.ts packages/shared/src/protocol/session.test.ts packages/shared/src/protocol/client-to-server.test.ts packages/shared/src/protocol/server-to-client.test.ts packages/shared/src/world/visibility.test.ts`
 Expected: FAIL because the shared package does not exist yet
 
-- [ ] **Step 3: Create the package and exact source files**
+- [x] **Step 3: Create the package and exact source files**
 
 Create `packages/shared/package.json`:
 
@@ -577,7 +577,7 @@ Create `packages/shared/src/world/visibility.ts` with `VisibilityWindow` and `is
 
 Create `packages/shared/src/index.ts` exporting all exact modules above.
 
-- [ ] **Step 4: Verify the package**
+- [x] **Step 4: Verify the package**
 
 Run: `pnpm --filter @pokecheetos/shared test`
 Expected: PASS
@@ -585,7 +585,7 @@ Expected: PASS
 Run: `pnpm --filter @pokecheetos/shared typecheck`
 Expected: PASS
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add packages/shared
@@ -1317,4 +1317,9 @@ Plan complete and saved to `docs/superpowers/plans/2026-03-13-pokecheetos-founda
   - Reconciled Task 7 Step 2/3/4/5/6 checklist state with already-landed room allocation/presence/simulation/room handler commits.
   - `pnpm --filter @pokecheetos/server test -- apps/server/src/services/world-simulation-service.test.ts apps/server/src/colyseus/rooms/world-room.test.ts` ✅
   - `pnpm --filter @pokecheetos/server typecheck` ✅
+  - Notes: no blocking issue found in this block.
+- [x] 2026-03-13 11:48 BRT — task 3 checklist closure verification block
+  - Reconciled Task 3 Step 1/2/3/4/5 checklist state with already-landed `@pokecheetos/shared` grid/protocol/world contracts.
+  - `pnpm --filter @pokecheetos/shared test` ✅
+  - `pnpm --filter @pokecheetos/shared typecheck` ✅
   - Notes: no blocking issue found in this block.
