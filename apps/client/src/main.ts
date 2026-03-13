@@ -11,7 +11,7 @@ async function bootstrapClient() {
     const phaserModule = await import('phaser');
     const apiBaseUrl = (import.meta.env?.VITE_API_BASE_URL as string | undefined) ?? 'http://localhost:3001';
     const roomEndpoint =
-      (import.meta.env?.VITE_ROOM_ENDPOINT as string | undefined) ?? 'ws://localhost:3001';
+      (import.meta.env?.VITE_ROOM_ENDPOINT as string | undefined) ?? 'http://localhost:3001';
 
     await createGame({
       parent: mountNode,

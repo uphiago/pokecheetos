@@ -144,14 +144,6 @@ function deriveRoomEndpoint(baseUrl?: string): string {
     throw new Error('createGame requires roomEndpoint or baseUrl when no browser origin is available');
   }
 
-  if (origin.startsWith('https://')) {
-    return `wss://${origin.slice('https://'.length)}`;
-  }
-
-  if (origin.startsWith('http://')) {
-    return `ws://${origin.slice('http://'.length)}`;
-  }
-
   return origin;
 }
 
