@@ -689,7 +689,7 @@ git commit -m "feat: add compiled map pipeline and runtime registry"
 - Create: `apps/server/src/persistence/migrations/0001_initial.sql`
 - Test: `apps/server/src/persistence/repositories/player-repository.test.ts`
 
-- [ ] **Step 1: Write the failing repository tests**
+- [x] **Step 1: Write the failing repository tests**
 
 Create `apps/server/src/persistence/repositories/player-repository.test.ts` with cases for:
 
@@ -698,12 +698,12 @@ Create `apps/server/src/persistence/repositories/player-repository.test.ts` with
 - `updateLastKnownState()` persists `lastMapId`, `lastTileX`, `lastTileY`, and `lastDirection`
 - `updateLastSeenAt()` updates `lastSeenAt`
 
-- [ ] **Step 2: Run tests to verify they fail**
+- [x] **Step 2: Run tests to verify they fail**
 
 Run: `pnpm exec vitest run apps/server/src/persistence/repositories/player-repository.test.ts`
 Expected: FAIL because the server package does not exist yet
 
-- [ ] **Step 3: Create the server package and persistence dependencies**
+- [x] **Step 3: Create the server package and persistence dependencies**
 
 Create `apps/server/package.json` with exact dependencies for:
 
@@ -717,7 +717,7 @@ Create `apps/server/package.json` with exact dependencies for:
 
 Create `apps/server/tsconfig.json` and `apps/server/vitest.config.ts`.
 
-- [ ] **Step 4: Implement migrations, DB initialization, and repository**
+- [x] **Step 4: Implement migrations, DB initialization, and repository**
 
 Create `apps/server/src/persistence/migrations/0001_initial.sql` with the `players` table.
 
@@ -734,7 +734,7 @@ Create `player-repository.ts` methods:
 - `updateLastKnownState()`
 - `updateLastSeenAt()`
 
-- [ ] **Step 5: Verify persistence tests and typecheck**
+- [x] **Step 5: Verify persistence tests and typecheck**
 
 Run: `pnpm --filter @pokecheetos/server test -- apps/server/src/persistence/repositories/player-repository.test.ts`
 Expected: PASS
@@ -742,7 +742,7 @@ Expected: PASS
 Run: `pnpm --filter @pokecheetos/server typecheck`
 Expected: PASS
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add apps/server/package.json apps/server/tsconfig.json apps/server/vitest.config.ts apps/server/src/persistence
@@ -1333,4 +1333,9 @@ Plan complete and saved to `docs/superpowers/plans/2026-03-13-pokecheetos-founda
   - Reconciled Task 4 Step 1/2/3/6 checklist state with already-landed `@pokecheetos/maps` compiler/runtime implementation.
   - `pnpm --filter @pokecheetos/maps test` ✅
   - `pnpm --filter @pokecheetos/maps typecheck` ✅
+  - Notes: no blocking issue found in this block.
+- [x] 2026-03-13 12:47 BRT — task 5 checklist closure verification block
+  - Reconciled Task 5 Step 1/2/3/4/5/6 checklist state with already-landed server persistence scaffold/repository implementation.
+  - `pnpm --filter @pokecheetos/server test -- apps/server/src/persistence/repositories/player-repository.test.ts` ✅
+  - `pnpm --filter @pokecheetos/server typecheck` ✅
   - Notes: no blocking issue found in this block.
