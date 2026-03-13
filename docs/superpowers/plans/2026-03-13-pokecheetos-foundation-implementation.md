@@ -1258,3 +1258,10 @@ Plan complete and saved to `docs/superpowers/plans/2026-03-13-pokecheetos-founda
   - `pnpm --filter @pokecheetos/server test -- apps/server/src/colyseus/rooms/world-room.test.ts` ✅
   - `pnpm --filter @pokecheetos/server typecheck` ✅
   - Notes: no blocking issue found in this block.
+- [x] 2026-03-13 08:08 BRT — task 7 room-allocation transition fallback coverage block
+  - Added focused `room-allocation-service.test.ts` coverage for transition-time allocation behavior:
+    - prefers the first room with capacity when allocating room hints;
+    - creates a new overflow room hint when every existing room is at capacity.
+  - `pnpm --filter @pokecheetos/server test -- apps/server/src/services/room-allocation-service.test.ts` ✅
+  - `pnpm --filter @pokecheetos/server typecheck` ✅
+  - Notes: no blocking issue found in this block.

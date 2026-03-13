@@ -143,4 +143,37 @@ describe('room allocation service', () => {
       kind: 'overflow'
     });
   });
+
+  it('returns the first available room hint during map transitions', () => {
+    const service = createRoomAllocationService({ roomCapacity: 2 });
+
+    service.allocate('town', 'guest-1');
+    service.allocate('town', 'guest-2');
+    service.allocate('town', 'guest-3');
+    service.allocate('town', 'guest-4');
+    service.allocate('town', 'guest-5');
+
+    expect(service.allocate('town')).toEqual({
+      roomId: 'town:overflow:2',
+      mapId: 'town',
+      created: false,
+      kind: 'overflow'
+    });
+  });
+
+  it('creates a new overflow room hint when every room is full during transitions', () => {
+    const service = createRoomAllocationService({ roomCapacity: 2 });
+
+    service.allocate('town', 'guest-1');
+    service.allocate('town', 'guest-2');
+    service.allocate('town', 'guest-3');
+    service.allocate('town', 'guest-4');
+
+    expect(service.allocate('town')).toEqual({
+      roomId: 'town:overflow:2',
+      mapId: 'town',
+      created: true,
+      kind: 'overflow'
+    });
+  });
 });
