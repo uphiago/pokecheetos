@@ -1270,3 +1270,9 @@ Plan complete and saved to `docs/superpowers/plans/2026-03-13-pokecheetos-founda
   - `pnpm exec vitest run apps/client/src/session/session-client.test.ts apps/client/src/network/room-connection-manager.test.ts apps/client/src/bootstrap/create-game.test.ts` ✅
   - `pnpm --filter @pokecheetos/client typecheck` ✅
   - Notes: no blocking issue found in this block.
+- [x] 2026-03-13 08:48 BRT — client vitest script + world suite normalization block
+  - Switched `apps/client/package.json` test script from Node's native runner to `vitest run` and added explicit client devDependencies (`vitest`, `jsdom`, `typescript`).
+  - Migrated world suite files (`world-store.test.ts`, `entity-presenter.test.ts`) from `node:test` + `assert` to `vitest` + `expect` for a single consistent runner.
+  - `pnpm --filter @pokecheetos/client test` ✅
+  - `pnpm --filter @pokecheetos/client typecheck` ✅
+  - Notes: no blocking issue found in this block.

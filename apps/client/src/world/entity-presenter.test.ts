@@ -1,11 +1,10 @@
-import assert from 'node:assert/strict';
-import { describe, it } from 'node:test';
+import { describe, expect, it } from 'vitest';
 import { createRemoteInterpolationTarget, tileToPixelPosition } from './entity-presenter.ts';
 
 describe('entity presenter', () => {
   it('maps local authoritative tile coordinates to exact pixels', () => {
     const pixels = tileToPixelPosition({ tileX: 7, tileY: 4 }, 16);
-    assert.deepEqual(pixels, { x: 112, y: 64 });
+    expect(pixels).toEqual({ x: 112, y: 64 });
   });
 
   it('produces interpolation targets for remote entities', () => {
@@ -16,7 +15,7 @@ describe('entity presenter', () => {
       0.5
     );
 
-    assert.deepEqual(target.authoritative, { x: 96, y: 64 });
-    assert.deepEqual(target.presented, { x: 88, y: 56 });
+    expect(target.authoritative).toEqual({ x: 96, y: 64 });
+    expect(target.presented).toEqual({ x: 88, y: 56 });
   });
 });

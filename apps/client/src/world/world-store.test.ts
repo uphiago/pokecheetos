@@ -1,5 +1,4 @@
-import assert from 'node:assert/strict';
-import { describe, it } from 'node:test';
+import { describe, expect, it } from 'vitest';
 import type { Direction } from '@pokecheetos/shared';
 import { WorldStore, type WorldPlayerSnapshot } from './world-store.ts';
 
@@ -25,28 +24,25 @@ describe('WorldStore', () => {
       leave: []
     });
 
-    assert.equal(store.getLocalPlayer()?.id, 'local-1');
-    assert.deepEqual(
-      store.getVisiblePlayers().map((p) => p.id).sort(),
-      ['remote-1', 'remote-2']
-    );
+    expect(store.getLocalPlayer()?.id).toBe('local-1');
+    expect(store.getVisiblePlayers().map((p) => p.id).sort()).toEqual([
+      'remote-1',
+      'remote-2'
+    ]);
   });
 
   it('applies visibility enter/leave updates for remote players', () => {
     const store = new WorldStore();
 
     store.applyVisibility({ enter: [player({ id: 'remote-1' })], leave: [] });
-    assert.equal(store.getVisiblePlayers().length, 1);
+    expect(store.getVisiblePlayers().length).toBe(1);
 
     store.applyVisibility({
       enter: [player({ id: 'remote-2' })],
       leave: ['remote-1']
     });
 
-    assert.deepEqual(
-      store.getVisiblePlayers().map((p) => p.id),
-      ['remote-2']
-    );
+    expect(store.getVisiblePlayers().map((p) => p.id)).toEqual(['remote-2']);
   });
 
   it('stores npc dialogue payloads as latest dialogue state', () => {
@@ -58,7 +54,7 @@ describe('WorldStore', () => {
       lines: ['Olá!', 'Bem-vindo ao mundo.']
     });
 
-    assert.deepEqual(store.getDialogue(), {
+    expect(store.getDialogue()).toEqual({
       npcId: 'npc-oak',
       lines: ['Olá!', 'Bem-vindo ao mundo.']
     });
