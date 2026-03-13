@@ -813,7 +813,7 @@ git commit -m "feat: add fastify guest bootstrap api"
 - Test: `apps/server/src/services/world-simulation-service.test.ts`
 - Test: `apps/server/src/colyseus/rooms/world-room.test.ts`
 
-- [ ] **Step 1: Write the failing simulation and room tests**
+- [x] **Step 1: Write the failing simulation and room tests**
 
 Create `apps/server/src/services/world-simulation-service.test.ts` with cases for:
 
@@ -832,12 +832,12 @@ Create `apps/server/src/colyseus/rooms/world-room.test.ts` with cases for:
 - duplicate guest connection ejects the older gameplay connection
 - repository `updateLastKnownState()` and `updateLastSeenAt()` are called on authoritative movement
 
-- [ ] **Step 2: Run tests to verify they fail**
+- [x] **Step 2: Run tests to verify they fail**
 
 Run: `pnpm --filter @pokecheetos/server test -- apps/server/src/services/world-simulation-service.test.ts apps/server/src/colyseus/rooms/world-room.test.ts`
 Expected: FAIL because services and rooms do not exist yet
 
-- [ ] **Step 3: Implement services**
+- [x] **Step 3: Implement services**
 
 Create `presence-service.ts` to track active guest gameplay connections and eject older duplicates.
 
@@ -855,7 +855,7 @@ Create `world-simulation-service.ts` to:
 - validate NPC blocking
 - persist `lastMapId`, `lastTileX`, `lastTileY`, `lastDirection`, `lastSeenAt`
 
-- [ ] **Step 4: Implement Colyseus state and room message handlers**
+- [x] **Step 4: Implement Colyseus state and room message handlers**
 
 Create `player-state.ts`, `world-state.ts`, and `world-room.ts` so that:
 
@@ -866,12 +866,12 @@ Create `player-state.ts`, `world-state.ts`, and `world-room.ts` so that:
 - room emits typed `npc_dialogue`, `map_transition`, and `room_error` payloads
 - room logs join/leave/allocation/reconnect/transition events
 
-- [ ] **Step 5: Verify tests**
+- [x] **Step 5: Verify tests**
 
 Run: `pnpm --filter @pokecheetos/server test -- apps/server/src/services/world-simulation-service.test.ts apps/server/src/colyseus/rooms/world-room.test.ts`
 Expected: PASS
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add apps/server/src/services apps/server/src/colyseus
@@ -1312,4 +1312,9 @@ Plan complete and saved to `docs/superpowers/plans/2026-03-13-pokecheetos-founda
   - `pnpm exec vitest run packages/config/src/runtime.test.ts` ✅
   - `pnpm exec tsc -p packages/config/tsconfig.json --noEmit` ✅
   - `pnpm exec node -e "import('./packages/config/src/index.ts').then((m) => console.log(m.runtimeConfig.roomCapacity))"` ✅
+  - Notes: no blocking issue found in this block.
+- [x] 2026-03-13 11:27 BRT — task 7 checklist closure verification block
+  - Reconciled Task 7 Step 2/3/4/5/6 checklist state with already-landed room allocation/presence/simulation/room handler commits.
+  - `pnpm --filter @pokecheetos/server test -- apps/server/src/services/world-simulation-service.test.ts apps/server/src/colyseus/rooms/world-room.test.ts` ✅
+  - `pnpm --filter @pokecheetos/server typecheck` ✅
   - Notes: no blocking issue found in this block.
