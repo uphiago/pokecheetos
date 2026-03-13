@@ -1056,7 +1056,7 @@ git commit -m "feat: add client bootstrap and room connection management"
 - Test: `apps/client/src/world/world-store.test.ts`
 - Test: `apps/client/src/world/entity-presenter.test.ts`
 
-- [ ] **Step 1: Write the failing world state tests**
+- [x] **Step 1: Write the failing world state tests**
 
 Create `apps/client/src/world/world-store.test.ts` with cases for:
 
@@ -1069,18 +1069,18 @@ Create `apps/client/src/world/entity-presenter.test.ts` with cases for:
 - local authoritative tile maps to exact pixels
 - remote players receive interpolation targets between authoritative tiles
 
-- [ ] **Step 2: Run tests to verify they fail**
+- [x] **Step 2: Run tests to verify they fail**
 
 Run: `pnpm --filter @pokecheetos/client test -- apps/client/src/world/world-store.test.ts apps/client/src/world/entity-presenter.test.ts`
 Expected: FAIL because the store and presenter do not exist yet
 
-- [ ] **Step 3: Implement store and presenter**
+- [x] **Step 3: Implement store and presenter**
 
 Create `world-store.ts` to consume room state and room point events.
 
 Create `entity-presenter.ts` to convert authoritative tile positions into render coordinates and remote tween targets.
 
-- [ ] **Step 4: Implement Phaser scenes, input, and dialogue flow**
+- [x] **Step 4: Implement Phaser scenes, input, and dialogue flow**
 
 Create:
 
@@ -1101,7 +1101,7 @@ Rules to enforce:
 - `Space` sends `npc_interact` for the facing NPC
 - `dialog-overlay.ts` renders returned dialogue lines from `npc_dialogue`
 
-- [ ] **Step 5: Verify client behavior**
+- [x] **Step 5: Verify client behavior**
 
 Run: `pnpm --filter @pokecheetos/client test -- apps/client/src/world/world-store.test.ts apps/client/src/world/entity-presenter.test.ts`
 Expected: PASS
@@ -1109,7 +1109,7 @@ Expected: PASS
 Run: `pnpm --filter @pokecheetos/client build`
 Expected: PASS
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add apps/client/src
@@ -1275,4 +1275,10 @@ Plan complete and saved to `docs/superpowers/plans/2026-03-13-pokecheetos-founda
   - Migrated world suite files (`world-store.test.ts`, `entity-presenter.test.ts`) from `node:test` + `assert` to `vitest` + `expect` for a single consistent runner.
   - `pnpm --filter @pokecheetos/client test` ✅
   - `pnpm --filter @pokecheetos/client typecheck` ✅
+  - Notes: no blocking issue found in this block.
+- [x] 2026-03-13 09:08 BRT — task 10 checklist reconciliation + verification block
+  - Reconciled Task 10 checklist items in the implementation plan with already-landed client world/scenes/input/dialogue commits.
+  - `pnpm --filter @pokecheetos/client test -- apps/client/src/world/world-store.test.ts apps/client/src/world/entity-presenter.test.ts` ✅
+  - `pnpm --filter @pokecheetos/client typecheck` ✅
+  - `pnpm --filter @pokecheetos/client build` ✅ (non-blocking Vite chunk-size warning only)
   - Notes: no blocking issue found in this block.
