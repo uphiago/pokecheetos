@@ -136,7 +136,8 @@ export class WorldRoom extends Room<WorldState> {
       displacedClient?.leave(4000, 'duplicate guest connection');
     }
 
-    this.state.players.set(client.sessionId, this.resolveJoinPlayerState(options));
+    const playerState = this.resolveJoinPlayerState(options);
+    this.state.players.set(client.sessionId, playerState);
     this.clientRegistry.set(client.sessionId, {
       leave: (code?: number, data?: string) => client.leave(code, data),
       removePlayerState: () => this.removePlayerState(client.sessionId)
@@ -327,22 +328,22 @@ export class WorldRoom extends Room<WorldState> {
 
     this.reconnectReservations.delete(identity.guestId);
     const player = new PlayerState();
-    player.guestId = reservation.player.guestId;
-    player.displayName = reservation.player.displayName;
-    player.mapId = reservation.player.mapId;
-    player.tileX = reservation.player.tileX;
-    player.tileY = reservation.player.tileY;
-    player.direction = reservation.player.direction;
+    player.guestId = reservation.player.guestId || identity.guestId;
+    player.displayName = reservation.player.displayName || identity.displayName || 'Guest';
+    player.mapId = reservation.player.mapId || identity.mapId || this.state.mapId || 'town';
+    player.tileX = Number.isFinite(reservation.player.tileX) ? reservation.player.tileX : identity.tileX || 0;
+    player.tileY = Number.isFinite(reservation.player.tileY) ? reservation.player.tileY : identity.tileY || 0;
+    player.direction = reservation.player.direction || 'down';
     return player;
   }
 
   private createPlayerState(identity: GuestBootstrapResponse): PlayerState {
     const player = new PlayerState();
     player.guestId = identity.guestId;
-    player.displayName = identity.displayName;
-    player.mapId = identity.mapId;
-    player.tileX = identity.tileX;
-    player.tileY = identity.tileY;
+    player.displayName = identity.displayName || 'Guest';
+    player.mapId = identity.mapId || this.state.mapId || 'town';
+    player.tileX = Number.isFinite(identity.tileX) ? identity.tileX : 0;
+    player.tileY = Number.isFinite(identity.tileY) ? identity.tileY : 0;
     player.direction = 'down';
     return player;
   }
