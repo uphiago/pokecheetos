@@ -1,3 +1,4 @@
+import { createPresenceService } from '../../services/presence-service';
 import { describe, expect, it, vi } from 'vitest';
 import { PlayerState } from '../schema/player-state';
 import { WorldRoom } from './world-room';
@@ -204,6 +205,63 @@ describe('WorldRoom npc_interact', () => {
       expect.objectContaining({
         type: 'room_error',
         code: 'invalid_interaction'
+      })
+    );
+  });
+});
+
+describe('WorldRoom join lifecycle', () => {
+  it('ejects the older gameplay connection when the same guest joins twice', async () => {
+    const leave = vi.fn();
+    const room = new WorldRoom({
+      presenceService: createPresenceService(),
+      clientRegistry: new Map()
+    });
+    room.onCreate({ mapId: 'town', roomId: 'town:base:1', maxClients: 50 });
+
+    await room.onJoin(
+      {
+        sessionId: 'session-1',
+        leave,
+        send: vi.fn()
+      } as any,
+      {
+        guestId: 'guest-1',
+        guestToken: 'token-1',
+        displayName: 'Guest 1',
+        mapId: 'town',
+        tileX: 5,
+        tileY: 6,
+        roomIdHint: 'town:base:1'
+      }
+    );
+
+    await room.onJoin(
+      {
+        sessionId: 'session-2',
+        leave: vi.fn(),
+        send: vi.fn()
+      } as any,
+      {
+        guestId: 'guest-1',
+        guestToken: 'token-1',
+        displayName: 'Guest 1 Replacement',
+        mapId: 'town',
+        tileX: 7,
+        tileY: 8,
+        roomIdHint: 'town:base:1'
+      }
+    );
+
+    expect(leave).toHaveBeenCalledTimes(1);
+    expect(room.state.players.has('session-1')).toBe(false);
+    expect(room.state.players.get('session-2')).toEqual(
+      expect.objectContaining({
+        guestId: 'guest-1',
+        displayName: 'Guest 1 Replacement',
+        mapId: 'town',
+        tileX: 7,
+        tileY: 8
       })
     );
   });

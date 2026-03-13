@@ -3,6 +3,7 @@ import { runtimeConfig } from '@pokecheetos/config';
 import { loadCompiledMap } from '@pokecheetos/maps';
 import type {
   Direction,
+  GuestBootstrapResponse,
   MoveIntentCommand,
   NpcInteractCommand,
   NpcDialogueEvent,
@@ -11,10 +12,12 @@ import type {
 } from '@pokecheetos/shared';
 import { isTileVisible } from '@pokecheetos/shared';
 import { createNpcInteractionService, type NpcInteractionService } from '../../services/npc-interaction-service';
+import { createPresenceService, type PresenceService } from '../../services/presence-service';
 import {
   createWorldSimulationService,
   type WorldSimulationService
 } from '../../services/world-simulation-service';
+import { PlayerState } from '../schema/player-state';
 import { WorldState } from '../schema/world-state';
 
 export type WorldRoomOptions = Readonly<{
@@ -31,13 +34,25 @@ type MovementInputState = {
 type WorldRoomDependencies = {
   npcInteractionService?: NpcInteractionService;
   worldSimulationService?: Pick<WorldSimulationService, 'simulateStep'>;
+  presenceService?: Pick<PresenceService, 'register' | 'unregister'>;
+  clientRegistry?: Map<string, RegisteredClientConnection>;
   loadMapById?: (mapId: string) => ReturnType<typeof loadCompiledMap>;
 };
+
+type RegisteredClientConnection = {
+  leave: (code?: number, data?: string) => void;
+  removePlayerState: () => void;
+};
+
+const defaultPresenceService = createPresenceService();
+const defaultClientRegistry = new Map<string, RegisteredClientConnection>();
 
 export class WorldRoom extends Room<WorldState> {
   private readonly npcInteractionService: NpcInteractionService;
   private readonly worldSimulationService: Pick<WorldSimulationService, 'simulateStep'>;
+  private readonly presenceService: Pick<PresenceService, 'register' | 'unregister'>;
   private readonly loadMapById: (mapId: string) => ReturnType<typeof loadCompiledMap>;
+  private readonly clientRegistry: Map<string, RegisteredClientConnection>;
   private readonly movementInputs = new Map<string, MovementInputState>();
   private readonly visibilityByClient = new Map<string, Set<string>>();
 
@@ -58,7 +73,9 @@ export class WorldRoom extends Room<WorldState> {
           // Persistence wiring will inject the real repository in a future room factory.
         }
       });
+    this.presenceService = dependencies.presenceService ?? defaultPresenceService;
     this.loadMapById = dependencies.loadMapById ?? loadCompiledMap;
+    this.clientRegistry = dependencies.clientRegistry ?? defaultClientRegistry;
   }
 
   onCreate(options: WorldRoomOptions) {
@@ -88,13 +105,30 @@ export class WorldRoom extends Room<WorldState> {
     }, this.patchRate);
   }
 
-  onLeave(client: Pick<Client, 'sessionId'>): void {
-    this.movementInputs.delete(client.sessionId);
-    this.visibilityByClient.delete(client.sessionId);
+  onJoin(client: Pick<Client, 'sessionId' | 'leave'>, options: GuestBootstrapResponse): void {
+    const registration = this.presenceService.register({
+      connectionId: client.sessionId,
+      guestId: options.guestId,
+      roomId: this.roomId
+    });
 
-    for (const visibleSet of this.visibilityByClient.values()) {
-      visibleSet.delete(client.sessionId);
+    if (registration.displaced) {
+      const displacedClient = this.clientRegistry.get(registration.displaced.connectionId);
+      displacedClient?.removePlayerState();
+      this.clientRegistry.delete(registration.displaced.connectionId);
+      displacedClient?.leave(4000, 'duplicate guest connection');
     }
+
+    this.state.players.set(client.sessionId, this.createPlayerState(options));
+    this.clientRegistry.set(client.sessionId, {
+      leave: (code?: number, data?: string) => client.leave(code, data),
+      removePlayerState: () => this.removePlayerState(client.sessionId)
+    });
+  }
+
+  onLeave(client: Pick<Client, 'sessionId'>): void {
+    this.presenceService.unregister(client.sessionId);
+    this.removePlayerState(client.sessionId);
   }
 
   handleMoveIntent(
@@ -260,5 +294,27 @@ export class WorldRoom extends Room<WorldState> {
       message
     };
     client.send(errorEvent.type, errorEvent);
+  }
+
+  private createPlayerState(identity: GuestBootstrapResponse): PlayerState {
+    const player = new PlayerState();
+    player.guestId = identity.guestId;
+    player.displayName = identity.displayName;
+    player.mapId = identity.mapId;
+    player.tileX = identity.tileX;
+    player.tileY = identity.tileY;
+    player.direction = 'down';
+    return player;
+  }
+
+  private removePlayerState(clientSessionId: string): void {
+    this.movementInputs.delete(clientSessionId);
+    this.visibilityByClient.delete(clientSessionId);
+    this.state.players.delete(clientSessionId);
+    this.clientRegistry.delete(clientSessionId);
+
+    for (const visibleSet of this.visibilityByClient.values()) {
+      visibleSet.delete(clientSessionId);
+    }
   }
 }

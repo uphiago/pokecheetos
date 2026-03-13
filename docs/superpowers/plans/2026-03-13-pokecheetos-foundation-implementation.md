@@ -1238,3 +1238,10 @@ Plan complete and saved to `docs/superpowers/plans/2026-03-13-pokecheetos-founda
   - `pnpm --filter @pokecheetos/server test -- apps/server/src/colyseus/rooms/world-room.test.ts` ✅
   - `pnpm --filter @pokecheetos/server typecheck` ✅
   - Notes: reconnect reservation/duplicate-guest room-level wiring remains pending for full Task 7 parity with the original checklist.
+- [x] 2026-03-13 07:10 BRT — task 7 duplicate guest ejection block
+  - Added `WorldRoom.onJoin()` bootstrap-state wiring so room joins hydrate authoritative `PlayerState` from guest bootstrap identity.
+  - Wired `presence-service` registration plus per-connection cleanup to eject the older gameplay session when the same `guestId` joins again.
+  - Added focused `world-room.test.ts` coverage proving the displaced session is removed from room state and asked to leave.
+  - `pnpm --filter @pokecheetos/server test -- apps/server/src/colyseus/rooms/world-room.test.ts` ✅
+  - `pnpm --filter @pokecheetos/server typecheck` ✅
+  - Notes: reconnect reservation reuse is still pending before full Task 7 closure.
