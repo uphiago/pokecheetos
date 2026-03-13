@@ -1,8 +1,14 @@
 import { buildHttpApp } from './http/app';
+import { buildColyseusServer } from './colyseus/server';
 
 async function main() {
   const app = await buildHttpApp();
-  await app.listen({ host: '0.0.0.0', port: 3001 });
+  const runtime = buildColyseusServer(app.server);
+
+  await app.listen({
+    host: runtime.startupConfig.host,
+    port: runtime.startupConfig.port
+  });
 }
 
 main().catch((error) => {
