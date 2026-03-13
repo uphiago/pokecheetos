@@ -43,8 +43,17 @@ pnpm --filter @pokecheetos/client dev
 # full workspace build graph
 pnpm build
 
+# same build with a larger Node heap for this invocation only
+pnpm build:high-memory
+
 # client-only production build
 pnpm --filter @pokecheetos/client build
+```
+
+If the default 8 GB heap is still too small, pass a larger value through the helper:
+
+```bash
+pnpm build:high-memory -- --heap=12288
 ```
 
 ## Validation Commands
@@ -68,6 +77,43 @@ pnpm --filter @pokecheetos/testing test -- packages/testing/src/smoke/workspace-
 - Client bootstrap failures are mapped to stable codes in `apps/client/src/bootstrap/client-error-mapper.ts`.
 - Server bootstrap logs are emitted as structured JSON with `event`, `requestId`, `phase`, and error fields.
 - Browser-console triage guidance lives in `docs/observability/browser-console-noise.md`.
+
+Release gate: follow [the release-readiness guide](./docs/release-readiness.md) before handing off a release candidate.
+
+## Build OOM Troubleshooting
+
+Node/Vite/Turbo builds can fail with messages such as `JavaScript heap out of memory` when the workspace graph gets large. Use a temporary heap increase for the specific build instead of exporting `NODE_OPTIONS` globally.
+
+Recommended repo-local command:
+
+```bash
+pnpm build:high-memory
+```
+
+One-off OS-specific commands:
+
+```bash
+# macOS / Linux (bash, zsh, sh)
+NODE_OPTIONS="--max-old-space-size=8192" pnpm build
+```
+
+```powershell
+# Windows PowerShell
+$env:NODE_OPTIONS="--max-old-space-size=8192"
+pnpm build
+Remove-Item Env:NODE_OPTIONS
+```
+
+```bat
+:: Windows Command Prompt
+set NODE_OPTIONS=--max-old-space-size=8192 && pnpm build
+```
+
+If you still hit heap pressure:
+
+- Raise the temporary limit further with `pnpm build:high-memory -- --heap=12288`.
+- Build only the package you need first, for example `pnpm --filter @pokecheetos/client build`.
+- Close other memory-heavy processes before retrying the production build.
 
 ## Load Test
 
