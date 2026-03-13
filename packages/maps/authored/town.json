@@ -1,0 +1,27 @@
+{
+  "mapId": "town",
+  "width": 20,
+  "height": 20,
+  "defaultSpawnId": "town_spawn",
+  "blockedTiles": [
+    { "tileX": 4, "tileY": 4 },
+    { "tileX": 4, "tileY": 5 }
+  ],
+  "spawns": [
+    { "id": "town_spawn", "tileX": 2, "tileY": 2 },
+    { "id": "to_route", "tileX": 10, "tileY": 1 }
+  ],
+  "transitions": [
+    { "tileX": 10, "tileY": 0, "toMapId": "route-1", "toSpawnId": "route_entry" }
+  ],
+  "npcs": [
+    {
+      "id": "npc-town-1",
+      "tileX": 6,
+      "tileY": 6,
+      "facing": "down",
+      "blocking": true,
+      "textId": "town.greeter"
+    }
+  ]
+}

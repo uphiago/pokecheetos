@@ -1,0 +1,25 @@
+{
+  "mapId": "route-1",
+  "width": 30,
+  "height": 20,
+  "defaultSpawnId": "route_entry",
+  "blockedTiles": [
+    { "tileX": 8, "tileY": 8 }
+  ],
+  "spawns": [
+    { "id": "route_entry", "tileX": 1, "tileY": 1 }
+  ],
+  "transitions": [
+    { "tileX": 0, "tileY": 1, "toMapId": "town", "toSpawnId": "to_route" }
+  ],
+  "npcs": [
+    {
+      "id": "npc-route-1",
+      "tileX": 3,
+      "tileY": 3,
+      "facing": "left",
+      "blocking": true,
+      "textId": "route.signpost"
+    }
+  ]
+}
