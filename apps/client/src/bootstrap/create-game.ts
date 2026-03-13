@@ -1,7 +1,12 @@
 import type { GuestBootstrapResponse } from '@pokecheetos/shared';
-import { RoomConnectionManager } from '../network/room-connection-manager.ts';
-import { createRoomClient, type RoomLike, type RoomClient as RoomClientInstance } from '../network/room-client.ts';
-import { SessionClient } from '../session/session-client.ts';
+import { RoomConnectionError, RoomConnectionManager } from '../network/room-connection-manager.ts';
+import {
+  RoomJoinError,
+  createRoomClient,
+  type RoomLike,
+  type RoomClient as RoomClientInstance
+} from '../network/room-client.ts';
+import { SessionBootstrapError, SessionClient } from '../session/session-client.ts';
 import { UiShellBridge } from '../ui/ui-shell-bridge.ts';
 
 export type GameLike = {
@@ -99,7 +104,12 @@ export async function createGame<TRoom extends RoomLike = RoomLike>(
     session = await sessionClient.bootstrapStoredGuest();
     room = await roomConnectionManager.connect(session);
   } catch (error) {
-    uiShellBridge.showError(error instanceof Error ? error.message : 'Unknown bootstrap error');
+    console.error({
+      event: 'client_bootstrap_failed',
+      code: resolveClientBootstrapErrorCode(error),
+      error
+    });
+    uiShellBridge.showError(resolveClientBootstrapErrorMessage(error));
     throw error;
   }
 
@@ -157,4 +167,32 @@ function resolveBrowserOrigin(): string | undefined {
 
 function isDatasetContainer(parent: string | HTMLElement): parent is HTMLElement {
   return typeof parent !== 'string' && 'dataset' in parent;
+}
+
+function resolveClientBootstrapErrorCode(error: unknown): string {
+  if (
+    error instanceof SessionBootstrapError ||
+    error instanceof RoomConnectionError ||
+    error instanceof RoomJoinError
+  ) {
+    return error.code;
+  }
+
+  return 'unknown';
+}
+
+function resolveClientBootstrapErrorMessage(error: unknown): string {
+  if (error instanceof SessionBootstrapError) {
+    if (error.code === 'network_fetch_failed') {
+      return 'Could not reach the session service. Check the server and network.';
+    }
+
+    return 'Could not start a guest session.';
+  }
+
+  if (error instanceof RoomConnectionError || error instanceof RoomJoinError) {
+    return 'Could not connect to the game room.';
+  }
+
+  return error instanceof Error ? error.message : 'Unknown bootstrap error';
 }

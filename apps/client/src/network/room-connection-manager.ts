@@ -3,6 +3,17 @@ import type { JoinWorldOptions, RoomLike } from './room-client.ts';
 
 export type { RoomLike } from './room-client.ts';
 
+export class RoomConnectionError extends Error {
+  readonly code = 'room_connect_failed';
+  readonly attemptedRoomIdHints: string[];
+
+  constructor(attemptedRoomIdHints: string[], cause: unknown) {
+    super(`Failed to connect room after ${attemptedRoomIdHints.length} attempt(s)`, { cause });
+    this.name = 'RoomConnectionError';
+    this.attemptedRoomIdHints = [...attemptedRoomIdHints];
+  }
+}
+
 export type RoomClientLike<TRoom extends RoomLike = RoomLike> = {
   joinWorld(options: JoinWorldOptions): Promise<TRoom>;
 };
@@ -88,12 +99,12 @@ export class RoomConnectionManager<TRoom extends RoomLike = RoomLike> {
       throw new Error('Cannot connect without a bootstrapped identity');
     }
 
-    const uniqueHints = roomIdHints.filter(
+    const attemptedHints = roomIdHints.filter(
       (hint, index) => roomIdHints.indexOf(hint) === index || index === roomIdHints.length - 1
     );
     let lastError: unknown;
 
-    for (const roomIdHint of uniqueHints) {
+    for (const roomIdHint of attemptedHints) {
       try {
         const room = await this.#roomClient.joinWorld({
           ...this.#identity,
@@ -112,6 +123,9 @@ export class RoomConnectionManager<TRoom extends RoomLike = RoomLike> {
       }
     }
 
-    throw lastError ?? new Error('Failed to connect room');
+    throw new RoomConnectionError(
+      attemptedHints,
+      lastError ?? new Error('Failed to connect room')
+    );
   }
 }

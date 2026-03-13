@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'vitest';
-import { RoomConnectionManager } from './room-connection-manager.ts';
+import { RoomConnectionError, RoomConnectionManager } from './room-connection-manager.ts';
 
 describe('RoomConnectionManager', () => {
   const bootstrapIdentity = {
@@ -155,5 +155,29 @@ describe('RoomConnectionManager', () => {
 
     assert.equal(leaveCalls, 2);
     assert.equal(manager.getActiveRoom(), null);
+  });
+
+  it('preserves attempted room hints when all room joins fail', async () => {
+    const manager = new RoomConnectionManager({
+      roomClient: {
+        async joinWorld() {
+          throw new Error('room join failed');
+        }
+      }
+    });
+
+    await assert.rejects(
+      () => manager.connect({ ...bootstrapIdentity }),
+      (error: unknown) => {
+        if (!(error instanceof RoomConnectionError)) {
+          return false;
+        }
+
+        assert.equal(error.code, 'room_connect_failed');
+        assert.deepEqual(error.attemptedRoomIdHints, ['town:base:1', 'town:base:1']);
+        assert.equal(error.cause instanceof Error ? error.cause.message : '', 'room join failed');
+        return true;
+      }
+    );
   });
 });

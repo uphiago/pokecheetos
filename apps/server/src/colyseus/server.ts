@@ -1,5 +1,6 @@
 import type { Server as HttpServer } from 'node:http';
 import { Server, type RegisteredHandler } from 'colyseus';
+import { WebSocketTransport } from '@colyseus/ws-transport';
 import { runtimeConfig } from '@pokecheetos/config';
 import { WorldRoom, type WorldRoomOptions } from './rooms/world-room';
 
@@ -19,6 +20,8 @@ export type ServerStartupConfig = Readonly<{
 
 export type ColyseusRuntime = Readonly<{
   gameServer: Server;
+  transport: WebSocketTransport;
+  transportName: string;
   startupConfig: ServerStartupConfig;
   worldRoomHandler: RegisteredHandler;
 }>;
@@ -49,14 +52,17 @@ export function buildColyseusServer(
   env: NodeJS.ProcessEnv = process.env
 ): ColyseusRuntime {
   const startupConfig = resolveServerStartupConfig(env);
+  const transport = new WebSocketTransport({ server });
   const gameServer = new Server({
     greet: false,
-    server
+    transport
   });
   const worldRoomHandler = registerWorldRoom(gameServer, startupConfig.worldRoom);
 
   return {
     gameServer,
+    transport,
+    transportName: transport.constructor.name,
     startupConfig,
     worldRoomHandler
   };

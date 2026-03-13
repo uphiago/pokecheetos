@@ -171,4 +171,24 @@ describe('SessionClient', () => {
     assert.deepEqual(storageState.operations, []);
     assert.equal(storageState.getStoredToken(), null);
   });
+
+  it('classifies network bootstrap failures and preserves the original cause', async () => {
+    const expectedCause = new TypeError('Failed to fetch');
+    const client = new SessionClient({
+      fetchFn: async () => {
+        throw expectedCause;
+      }
+    });
+
+    await assert.rejects(() => client.bootstrapStoredGuest(), (error: unknown) => {
+      if (!(error instanceof SessionBootstrapError)) {
+        return false;
+      }
+
+      assert.equal(error.code, 'network_fetch_failed');
+      assert.equal(error.status, 0);
+      assert.equal(error.cause, expectedCause);
+      return true;
+    });
+  });
 });
