@@ -910,7 +910,7 @@ Create `npc-interaction-service.ts` to:
 
 Update `world-room.ts` to send `npc_dialogue` events back to the requesting client.
 
-- [ ] **Step 4: Add the parameterized load test script**
+- [x] **Step 4: Add the parameterized load test script**
 
 Create `apps/server/src/loadtest/world-room.loadtest.ts` with CLI flags:
 
@@ -925,7 +925,7 @@ The script must fail on:
 - corrupted authoritative tile state
 - out-of-window players appearing in visible state
 
-- [ ] **Step 5: Verify tests and smoke-load mode**
+- [x] **Step 5: Verify tests and smoke-load mode**
 
 Run: `pnpm --filter @pokecheetos/server test -- apps/server/src/services/npc-interaction-service.test.ts`
 Expected: PASS
