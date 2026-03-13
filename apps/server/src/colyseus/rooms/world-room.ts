@@ -96,15 +96,14 @@ export class WorldRoom extends Room<WorldState> {
   }
 
   onCreate(options: WorldRoomOptions) {
+    const state = new WorldState();
+    state.mapId = options.mapId;
+    state.roomId = options.roomId;
+
     this.autoDispose = false;
     this.maxClients = options.maxClients;
     this.patchRate = Math.round(1_000 / runtimeConfig.serverTickRate);
-    this.setState(
-      new WorldState({
-        mapId: options.mapId,
-        roomId: options.roomId
-      })
-    );
+    this.setState(state);
 
     this.onMessage('move_intent', (client: Client, message: MoveIntentCommand) => {
       this.handleMoveIntent(client, message);
