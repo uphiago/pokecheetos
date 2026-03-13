@@ -1265,3 +1265,8 @@ Plan complete and saved to `docs/superpowers/plans/2026-03-13-pokecheetos-founda
   - `pnpm --filter @pokecheetos/server test -- apps/server/src/services/room-allocation-service.test.ts` ✅
   - `pnpm --filter @pokecheetos/server typecheck` ✅
   - Notes: no blocking issue found in this block.
+- [x] 2026-03-13 08:29 BRT — task 9 client test-runner alignment block
+  - Migrated Task 9 bootstrap/connection/create-game tests from `node:test` imports to `vitest` imports so they are discovered by the configured client test runner.
+  - `pnpm exec vitest run apps/client/src/session/session-client.test.ts apps/client/src/network/room-connection-manager.test.ts apps/client/src/bootstrap/create-game.test.ts` ✅
+  - `pnpm --filter @pokecheetos/client typecheck` ✅
+  - Notes: no blocking issue found in this block.
