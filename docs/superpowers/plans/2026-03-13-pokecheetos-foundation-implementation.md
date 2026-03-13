@@ -960,7 +960,7 @@ git commit -m "feat: add npc interaction and load test baseline"
 - Test: `apps/client/src/session/session-client.test.ts`
 - Test: `apps/client/src/network/room-connection-manager.test.ts`
 
-- [ ] **Step 1: Write the failing client bootstrap tests**
+- [x] **Step 1: Write the failing client bootstrap tests**
 
 Create `apps/client/src/session/session-client.test.ts` with cases for:
 
@@ -977,12 +977,12 @@ Create `apps/client/src/network/room-connection-manager.test.ts` with cases for:
 
 Create `apps/client/src/bootstrap/create-game.test.ts` with a smoke test that verifies `createGame()` wires session bootstrap, room connection, and UI shell creation without browser E2E.
 
-- [ ] **Step 2: Run tests to verify they fail**
+- [x] **Step 2: Run tests to verify they fail**
 
 Run: `pnpm exec vitest run apps/client/src/session/session-client.test.ts apps/client/src/network/room-connection-manager.test.ts apps/client/src/bootstrap/create-game.test.ts`
 Expected: FAIL because the client package does not exist yet
 
-- [ ] **Step 3: Create the client package and boot files**
+- [x] **Step 3: Create the client package and boot files**
 
 Create `apps/client/package.json` with dependencies for `phaser`, `colyseus.js`, `vite`, `vitest`, `typescript`, and `jsdom`.
 
@@ -1008,7 +1008,7 @@ Create `apps/client/src/main.ts` and `apps/client/src/bootstrap/create-game.ts` 
 - create `ui-shell-bridge`
 - start the Phaser game
 
-- [ ] **Step 4: Implement session and connection layers**
+- [x] **Step 4: Implement session and connection layers**
 
 Create `session-client.ts` to:
 
@@ -1025,7 +1025,7 @@ Create `room-connection-manager.ts` to own:
 - same-room-first reconnect policy
 - transition-time room switching
 
-- [ ] **Step 5: Verify tests and typecheck**
+- [x] **Step 5: Verify tests and typecheck**
 
 Run: `pnpm --filter @pokecheetos/client test -- apps/client/src/session/session-client.test.ts apps/client/src/network/room-connection-manager.test.ts apps/client/src/bootstrap/create-game.test.ts`
 Expected: PASS
@@ -1033,7 +1033,7 @@ Expected: PASS
 Run: `pnpm --filter @pokecheetos/client typecheck`
 Expected: PASS
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add apps/client
@@ -1295,4 +1295,9 @@ Plan complete and saved to `docs/superpowers/plans/2026-03-13-pokecheetos-founda
   - Reconciled Task 11 Step 1/2/3/6 checklist state with already-landed testing package + README updates.
   - `pnpm exec vitest run packages/testing/src/smoke/workspace-smoke.test.ts` ✅
   - `pnpm --filter @pokecheetos/testing typecheck` ✅
+  - Notes: no blocking issue found in this block.
+- [x] 2026-03-13 10:27 BRT — task 9 checklist reconciliation + verification block
+  - Reconciled Task 9 Step 1/2/3/4/5/6 checklist state with already-landed client bootstrap/session/connection commits.
+  - `pnpm --filter @pokecheetos/client test -- apps/client/src/session/session-client.test.ts apps/client/src/network/room-connection-manager.test.ts apps/client/src/bootstrap/create-game.test.ts` ✅
+  - `pnpm --filter @pokecheetos/client typecheck` ✅
   - Notes: no blocking issue found in this block.
