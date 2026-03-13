@@ -899,7 +899,7 @@ Create `apps/server/src/services/npc-interaction-service.test.ts` with cases for
 Run: `pnpm --filter @pokecheetos/server test -- apps/server/src/services/npc-interaction-service.test.ts`
 Expected: FAIL because the service does not exist yet
 
-- [ ] **Step 3: Implement NPC interaction service and room wiring**
+- [x] **Step 3: Implement NPC interaction service and room wiring**
 
 Create `npc-interaction-service.ts` to:
 
